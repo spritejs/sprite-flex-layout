@@ -1,21 +1,24 @@
+import {getProp} from './util';
+
+const CROSS_AXIS_SIZE = Symbol('crossAxisSize');
+
 class FlexLine {
   constructor(items, {flexDirection} = {}) {
     this.items = items;
     this.flexDirection = flexDirection;
+    this.crossPosition = 0;
+    const pros = getProp(flexDirection);
+    this.mainLayoutSize = pros.mainLayoutSize;
+    this.crossLayoutSize = pros.crossLayoutSize;
   }
 
   /**
    * get main axis size base on flex direction
    */
   get mainAxisSize() {
-    const flexDirection = this.flexDirection;
-    let prop = 'layoutWidth';
-    if(flexDirection === 'column' || flexDirection === 'column-reverse') {
-      prop = 'layoutHeight';
-    }
     let value = 0;
     this.items.forEach((item) => {
-      value += item[prop];
+      value += item[this.mainLayoutSize];
     });
     return value;
   }
@@ -24,15 +27,23 @@ class FlexLine {
    * get cross axis size based on flex direction
    */
   get crossAxisSize() {
-    const flexDirection = this.flexDirection;
-    let prop = 'layoutHeight';
-    if(flexDirection === 'column' || flexDirection === 'column-reverse') {
-      prop = 'layoutWidth';
-    }
+    if(this[CROSS_AXIS_SIZE]) return this[CROSS_AXIS_SIZE];
     const values = this.items.map((item) => {
-      return item[prop];
+      return item[this.crossLayoutSize];
     });
-    return Math.max(...values);
+    const result = Math.max(...values);
+    this[CROSS_AXIS_SIZE] = result;
+    return result;
+  }
+
+  parseItemAlignSelf(item, crossSize) {
+    
+  }
+
+  parseAlignSelf(crossSize = 0) {
+    this.items.forEach((item) => {
+      this.parseItemAlignSelf(item, crossSize);
+    });
   }
 }
 

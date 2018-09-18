@@ -104,3 +104,24 @@ export function parseCombineValue(value) {
   }
   return value;
 }
+
+export function getProp(flexDirection) {
+  if(flexDirection === 'column' || flexDirection === 'column-reverse') {
+    return {
+      mainLayoutSize: 'layoutHeight',
+      crossLayoutSize: 'layoutWidth',
+      mainSize: 'height',
+      crossSize: 'width',
+      mainPos: 'left',
+      crossPos: 'top',
+    };
+  }
+  return {
+    mainLayoutSize: 'layoutWidth',
+    crossLayoutSize: 'layoutHeight',
+    mainSize: 'width',
+    crossSize: 'height',
+    mainPos: 'top',
+    crossPos: 'left',
+  };
+}

@@ -16,12 +16,12 @@ import {
 class Config {
   constructor(config = {}) {
     this.config = {};
-    for(const item in config) {
+    Object.keys(config).forEach((item) => {
       if(!flexProperties.includes(item)) {
         throw new Error(`config ${item} is not valid`);
       }
       this[item] = config[item];
-    }
+    });
   }
 
   get border() {
@@ -157,7 +157,7 @@ const properties = {
   alignContent: alignContentValues,
 };
 
-for(const property in properties) {
+Object.keys(properties).forEach((property) => {
   Object.defineProperty(Config.prototype, property, {
     get() {
       return this.config[property] || properties[property][0];
@@ -172,6 +172,6 @@ for(const property in properties) {
     enumerable: true,
     configurable: true,
   });
-}
+});
 
 export default Config;

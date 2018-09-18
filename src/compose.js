@@ -1,9 +1,15 @@
 import FlexLine from './flexLine';
+import {getProp} from './util';
 
 class Compose {
   constructor(container) {
     this.container = container;
     this.flexLines = this.parseFlexLines(container.children);
+    const props = getProp(this.container.flexDirection);
+    this.mainLayoutSize = props.mainLayoutSize;
+    this.mainSize = props.mainSize;
+    this.mainPos = props.mainPos;
+    this.crossSize = props.crossSize;
   }
 
   /**
@@ -17,12 +23,8 @@ class Compose {
     if(wrap === 'nowrap') {
       lines = [items];
     } else {
-      let prop = 'layoutWidth';
-      let containerProp = 'width';
-      if(flexDirection === 'column' || flexDirection === 'column-reverse') {
-        prop = 'layoutHeight';
-        containerProp = 'height';
-      }
+      const prop = this.mainLayoutSize;
+      const containerProp = this.mainSize;
       let line = [];
       const containerPropValue = this.container[containerProp];
       let propValue = 0;
@@ -61,22 +63,64 @@ class Compose {
   parseAlignContent() {
     if(this.flexLines.length === 1) return;
     const alignContent = this.container.alignContent;
-    const flexDirection = this.container.flexDirection;
-    let posProp = 'top';
-    let sizeProp = 'height';
-    if(flexDirection === 'column' || flexDirection === 'column-reverse') {
-      posProp = 'left';
-      sizeProp = 'width';
-    }
-    const mainAxisSize = this.container[sizeProp];
-    let linesMainAxisSize = 0;
+    const sizeProp = this.crossSize;
+    const crossAxisSize = this.container[sizeProp];
+    let linesCrossAxisSize = 0;
+    const lineLength = this.flexLines.length;
     this.flexLines.forEach((line) => {
-      linesMainAxisSize += line.mainAxisSize;
+      linesCrossAxisSize += line.crossAxisSize;
     });
+    // magin between lines
+    const linesMarginSize = [];
+    const leftSize = Math.max(crossAxisSize - linesCrossAxisSize, 0);
+    let itemSize = 0;
+    switch (alignContent) {
+      case 'flex-start':
+        break;
+      case 'flex-end':
+        linesMarginSize[0] = crossAxisSize - linesCrossAxisSize;
+        break;
+      case 'center':
+        linesMarginSize[0] = Math.floor(leftSize / 2);
+        break;
+      case 'space-between':
+        itemSize = Math.floor(leftSize / (lineLength - 1));
+        linesMarginSize[0] = 0;
+        break;
+      case 'space-around':
+        itemSize = Math.floor(leftSize / lineLength);
+        linesMarginSize[0] = Math.floor(itemSize / 2);
+        break;
+      case 'space-evenly':
+        itemSize = Math.floor(leftSize / (lineLength + 1));
+        break;
+      default: // default is stretch
+        itemSize = Math.floor(leftSize / lineLength);
+        linesMarginSize[0] = 0;
+        break;
+    }
+    let crossPosition = 0;
+    this.flexLines.forEach((line, index) => {
+      linesMarginSize.push(itemSize);
+      crossPosition += linesMarginSize[index];
+      line.crossPosition = crossPosition;
+      crossPosition += line.crossAxisSize;
+    });
+  }
+
+  parseAlignSelf() {
+    if(this.flexLines.length === 1) {
+      this.flexLines[0].parseAlignSelf(this.container[this.crossSize]);
+    } else {
+      this.flexLines.forEach((line) => {
+        line.parseAlignSelf(line.crossAxisSize);
+      });
+    }
   }
 
   compose() {
     this.parseAlignContent();
+    this.parseAlignSelf();
   }
 }
 
