@@ -1,11 +1,11 @@
 class Layout {
   constructor(left, right, top, bottom, width, height) {
-    this.left = left;
-    this.right = right;
-    this.top = top;
-    this.bottom = bottom;
-    this.width = width;
-    this.height = height;
+    this.left = left || 0;
+    this.right = right || 0;
+    this.top = top || 0;
+    this.bottom = bottom || 0;
+    this.width = width || 0;
+    this.height = height || 0;
   }
 
   toString() {

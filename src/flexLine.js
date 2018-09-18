@@ -7,9 +7,10 @@ class FlexLine {
     this.items = items;
     this.flexDirection = flexDirection;
     this.crossPosition = 0;
-    const pros = getProp(flexDirection);
-    this.mainLayoutSize = pros.mainLayoutSize;
-    this.crossLayoutSize = pros.crossLayoutSize;
+    const props = getProp(flexDirection);
+    this.mainLayoutSize = props.mainLayoutSize;
+    this.crossLayoutSize = props.crossLayoutSize;
+    this.mainPos = props.mainPos;
   }
 
   /**
@@ -37,7 +38,27 @@ class FlexLine {
   }
 
   parseItemAlignSelf(item, crossSize) {
-    
+    let alignSelf = item.alignSelf;
+    if(alignSelf === 'auto') {
+      alignSelf = item.parent.alignSelf;
+    }
+    const layoutSize = item[this.crossLayoutSize];
+    let crossPosition = 0;
+    switch (alignSelf) {
+      case 'flex-end':
+        crossPosition = crossSize - layoutSize;
+        break;
+      case 'center':
+        crossPosition = Math.floor((crossSize - layoutSize) / 2);
+        break;
+      case 'flex-start':
+      case 'baseline':
+      case 'stretch':
+        break;
+      default:
+        break;
+    }
+    item[this.mainPos] = this.crossPosition + crossPosition;
   }
 
   parseAlignSelf(crossSize = 0) {

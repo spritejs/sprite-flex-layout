@@ -3,13 +3,13 @@ import {getProp} from './util';
 
 class Compose {
   constructor(container) {
+    const props = getProp(container.flexDirection);
     this.container = container;
-    this.flexLines = this.parseFlexLines(container.children);
-    const props = getProp(this.container.flexDirection);
     this.mainLayoutSize = props.mainLayoutSize;
     this.mainSize = props.mainSize;
     this.mainPos = props.mainPos;
     this.crossSize = props.crossSize;
+    this.flexLines = this.parseFlexLines(container.children);
   }
 
   /**
