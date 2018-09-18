@@ -59,7 +59,6 @@ class Compose {
    * parse align-content on multiline flex lines
    */
   parseAlignContent() {
-    console.log('flexLines', this.flexLines.length)
     if(this.flexLines.length === 1) return;
     const alignContent = this.container.alignContent;
     const flexDirection = this.container.flexDirection;
@@ -74,7 +73,6 @@ class Compose {
     this.flexLines.forEach((line) => {
       linesMainAxisSize += line.mainAxisSize;
     });
-    console.log('size', mainAxisSize, linesMainAxisSize);
   }
 
   compose() {
