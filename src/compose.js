@@ -6,8 +6,10 @@ class Compose {
     const props = getProp(container.flexDirection);
     this.container = container;
     this.mainLayoutSize = props.mainLayoutSize;
+    this.mainComputedSize = props.mainComputedSize;
     this.mainSize = props.mainSize;
     this.mainPos = props.mainPos;
+    this.crossComputedSize = props.crossComputedSize;
     this.crossSize = props.crossSize;
     this.flexLines = this.parseFlexLines(container.children);
   }
@@ -19,17 +21,15 @@ class Compose {
   parseFlexLines(items) {
     const wrap = this.container.flexWrap;
     const flexDirection = this.container.flexDirection;
+    const containerPropValue = this.container[this.mainComputedSize];
     let lines = [];
-    if(wrap === 'nowrap') {
+    if(wrap === 'nowrap' || !containerPropValue) {
       lines = [items];
     } else {
-      const prop = this.mainLayoutSize;
-      const containerProp = this.mainSize;
       let line = [];
-      const containerPropValue = this.container[containerProp];
       let propValue = 0;
       items.forEach((item) => {
-        const value = item[prop];
+        const value = item[this.mainLayoutSize];
         if((propValue + value) > containerPropValue && line.length) {
           lines.push(line);
           propValue = 0;
@@ -52,7 +52,10 @@ class Compose {
       });
     }
     lines = lines.map((line) => {
-      return new FlexLine(line, {flexDirection});
+      return new FlexLine(line, {
+        flexDirection,
+        alignContent: this.container.alignContent,
+      });
     });
     return lines;
   }
@@ -63,7 +66,7 @@ class Compose {
   parseAlignContent() {
     if(this.flexLines.length === 1) return;
     const alignContent = this.container.alignContent;
-    const sizeProp = this.crossSize;
+    const sizeProp = this.crossComputedSize;
     const crossAxisSize = this.container[sizeProp];
     let linesCrossAxisSize = 0;
     const lineLength = this.flexLines.length;
@@ -102,15 +105,19 @@ class Compose {
     let crossPosition = 0;
     this.flexLines.forEach((line, index) => {
       linesMarginSize.push(itemSize);
-      crossPosition += linesMarginSize[index];
+      crossPosition += linesMarginSize[index] || 0;
       line.crossPosition = crossPosition;
+      line.crossSpace = linesMarginSize[index + 1] || 0;
       crossPosition += line.crossAxisSize;
     });
   }
 
   parseAlignSelf() {
     if(this.flexLines.length === 1) {
-      this.flexLines[0].parseAlignSelf(this.container[this.crossSize]);
+      const line = this.flexLines[0];
+      const crossComputedSize = this.container[this.crossComputedSize];
+      line.crossSpace = crossComputedSize - line.crossAxisSize;
+      line.parseAlignSelf(crossComputedSize);
     } else {
       this.flexLines.forEach((line) => {
         line.parseAlignSelf(line.crossAxisSize);
@@ -118,9 +125,23 @@ class Compose {
     }
   }
 
+  computeContainerSize() {
+    const line = this.flexLines[0];
+    const crossSize = this.container[this.crossComputedSize];
+    if(!crossSize) {
+      this.container[this.crossSize] = line.crossAxisSize;
+    }
+    const mainSize = this.container[this.mainComputedSize];
+    if(!mainSize) {
+      this.container[this.mainSize] = line.mainAxisSize;
+    }
+  }
+
   compose() {
     this.parseAlignContent();
     this.parseAlignSelf();
+
+    this.computeContainerSize();
   }
 }
 

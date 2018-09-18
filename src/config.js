@@ -13,6 +13,8 @@ import {
 // const LAYOUT_WIDTH = Symbol('layoutWidth');
 // const LAYOUT_HEIGHT = Symbol('layoutHeight');
 
+const WIDTH = Symbol('width');
+const HEIGHT = Symbol('height');
 class Config {
   constructor(config = {}) {
     this.config = {};
@@ -82,7 +84,7 @@ class Config {
 
   get layoutWidth() {
     // if(this[LAYOUT_WIDTH]) return this[LAYOUT_WIDTH];
-    let width = this.width || 0;
+    let width = this.computedWidth || 0;
     const minWidth = this.minWidth || 0;
     const maxWidth = this.maxWidth || 0;
     if(minWidth && width < minWidth) {
@@ -106,7 +108,7 @@ class Config {
 
   get layoutHeight() {
     // if(this[LAYOUT_HEIGHT]) return this[LAYOUT_HEIGHT];
-    let height = this.height || 0;
+    let height = this.computedHeight || 0;
     const minHeight = this.minHeight || 0;
     const maxHeight = this.maxHeight || 0;
     if(minHeight && height < minHeight) {
@@ -145,6 +147,24 @@ class Config {
     });
     this.config._flexFlow = value;
     return this;
+  }
+
+  get width() {
+    return this[WIDTH];
+  }
+
+  set width(value) {
+    this.computedWidth = value;
+    this[WIDTH] = value;
+  }
+
+  get height() {
+    return this[HEIGHT];
+  }
+
+  set height(value) {
+    this.computedHeight = value;
+    this[HEIGHT] = value;
   }
 }
 

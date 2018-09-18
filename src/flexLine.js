@@ -3,14 +3,18 @@ import {getProp} from './util';
 const CROSS_AXIS_SIZE = Symbol('crossAxisSize');
 
 class FlexLine {
-  constructor(items, {flexDirection} = {}) {
+  constructor(items, {flexDirection, alignContent} = {}) {
     this.items = items;
     this.flexDirection = flexDirection;
+    this.alignContent = alignContent;
     this.crossPosition = 0;
+    this.crossSpace = 0;
     const props = getProp(flexDirection);
     this.mainLayoutSize = props.mainLayoutSize;
     this.crossLayoutSize = props.crossLayoutSize;
     this.mainPos = props.mainPos;
+    this.crossSize = props.crossSize;
+    this.crossComputedSize = props.crossComputedSize;
   }
 
   /**
@@ -43,6 +47,7 @@ class FlexLine {
       alignSelf = item.parent.alignSelf;
     }
     const layoutSize = item[this.crossLayoutSize];
+    const itemCrossSize = item[this.crossSize];
     let crossPosition = 0;
     switch (alignSelf) {
       case 'flex-end':
@@ -51,9 +56,14 @@ class FlexLine {
       case 'center':
         crossPosition = Math.floor((crossSize - layoutSize) / 2);
         break;
+      case 'stretch':
+        // stretch item cross size
+        if(this.alignContent === 'stretch' && itemCrossSize === undefined && this.crossSpace) {
+          item[this.crossSize] = item[this.crossComputedSize] + this.crossSpace;
+        }
+        break;
       case 'flex-start':
       case 'baseline':
-      case 'stretch':
         break;
       default:
         break;

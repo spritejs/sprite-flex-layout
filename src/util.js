@@ -40,6 +40,8 @@ export const flexProperties = [
   'boxSizing',
   'layoutWidth',
   'layoutHeight',
+  'computedWidth',
+  'computedHeight',
   // 'order',
 ];
 
@@ -111,7 +113,9 @@ export function getProp(flexDirection) {
       mainLayoutSize: 'layoutHeight',
       crossLayoutSize: 'layoutWidth',
       mainSize: 'height',
+      mainComputedSize: 'computedHeight',
       crossSize: 'width',
+      crossComputedSize: 'computedWidth',
       mainPos: 'left',
       crossPos: 'top',
     };
@@ -120,7 +124,9 @@ export function getProp(flexDirection) {
     mainLayoutSize: 'layoutWidth',
     crossLayoutSize: 'layoutHeight',
     mainSize: 'width',
+    mainComputedSize: 'computedWidth',
     crossSize: 'height',
+    crossComputedSize: 'computedHeight',
     mainPos: 'top',
     crossPos: 'left',
   };
