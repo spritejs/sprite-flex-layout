@@ -52,10 +52,7 @@ class Compose {
       });
     }
     lines = lines.map((line) => {
-      return new FlexLine(line, {
-        flexDirection,
-        alignContent: this.container.alignContent,
-      });
+      return new FlexLine(line, this.container);
     });
     return lines;
   }
@@ -137,10 +134,16 @@ class Compose {
     }
   }
 
+  parseJustifyContent() {
+    this.flexLines.forEach((line) => {
+      line.parseJustifyContent();
+    });
+  }
+
   compose() {
     this.parseAlignContent();
     this.parseAlignSelf();
-
+    this.parseJustifyContent();
     this.computeContainerSize();
   }
 }

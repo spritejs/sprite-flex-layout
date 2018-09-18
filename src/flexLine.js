@@ -3,13 +3,13 @@ import {getProp} from './util';
 const CROSS_AXIS_SIZE = Symbol('crossAxisSize');
 
 class FlexLine {
-  constructor(items, {flexDirection, alignContent} = {}) {
+  constructor(items, container) {
     this.items = items;
-    this.flexDirection = flexDirection;
-    this.alignContent = alignContent;
+    this.flexDirection = container.flexDirection;
+    this.alignContent = container.alignContent;
     this.crossPosition = 0;
     this.crossSpace = 0;
-    const props = getProp(flexDirection);
+    const props = getProp(this.flexDirection);
     this.mainLayoutSize = props.mainLayoutSize;
     this.crossLayoutSize = props.crossLayoutSize;
     this.mainPos = props.mainPos;
@@ -62,9 +62,8 @@ class FlexLine {
           item[this.crossSize] = item[this.crossComputedSize] + this.crossSpace;
         }
         break;
-      case 'flex-start':
       case 'baseline':
-        break;
+        throw new Error('align-self:baseline is not support');
       default:
         break;
     }
@@ -75,6 +74,10 @@ class FlexLine {
     this.items.forEach((item) => {
       this.parseItemAlignSelf(item, crossSize);
     });
+  }
+
+  parseJustifyContent() {
+
   }
 }
 
