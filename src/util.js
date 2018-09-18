@@ -118,6 +118,10 @@ export function getProp(flexDirection) {
       crossComputedSize: 'computedWidth',
       mainPos: 'left',
       crossPos: 'top',
+      mainMarginStart: 'marginTop',
+      mainMarginEnd: 'marginBottom',
+      crossMarginStart: 'marginLeft',
+      crossMarginEnd: 'marginRight',
     };
   }
   return {
@@ -129,5 +133,9 @@ export function getProp(flexDirection) {
     crossComputedSize: 'computedHeight',
     mainPos: 'top',
     crossPos: 'left',
+    mainMarginStart: 'marginLeft',
+    mainMarginEnd: 'marginRight',
+    crossMarginStart: 'marginTop',
+    crossMarginEnd: 'marginBottom',
   };
 }

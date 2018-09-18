@@ -16,8 +16,9 @@ import {
 const WIDTH = Symbol('width');
 const HEIGHT = Symbol('height');
 class Config {
-  constructor(config = {}) {
+  constructor(config = {}, node) {
     this.config = {};
+    this.node = node;
     Object.keys(config).forEach((item) => {
       if(!flexProperties.includes(item)) {
         throw new Error(`config ${item} is not valid`);
@@ -82,6 +83,21 @@ class Config {
     return this;
   }
 
+  _caculateMargin(prop, parentValue) {
+    const value = this[prop];
+    if(value === 'auto') return 0;
+    // percent value
+    if(/%$/.test(value)) {
+      if(!parentValue) {
+        throw new Error('parent node width & height must be set when margin value is precent');
+      }
+      const ret = parentValue * parseFloat(value, 10);
+      this[prop] = ret;
+      return ret;
+    }
+    return value || 0;
+  }
+
   get layoutWidth() {
     // if(this[LAYOUT_WIDTH]) return this[LAYOUT_WIDTH];
     let width = this.computedWidth || 0;
@@ -94,11 +110,14 @@ class Config {
       width = maxWidth;
     }
 
-    const props = ['marginLeft', 'marginRight'];
+    const props = [];
     if(this.boxSizing !== 'border-box') {
       props.push('borderLeft', 'borderRight', 'paddingLeft', 'paddingRight');
     }
-    let value = 0;
+    const parentWidth = this.node.parent.computedWidth;
+    const marginLeft = this._caculateMargin('marginLeft', parentWidth);
+    const marginRight = this._caculateMargin('marginRight', parentWidth);
+    let value = marginLeft + marginRight;
     props.forEach((item) => {
       value += this[item] || 0;
     });
@@ -118,11 +137,14 @@ class Config {
       height = maxHeight;
     }
 
-    const props = ['marginTop', 'marginBottom'];
+    const props = [];
     if(this.boxSizing !== 'border-box') {
       props.push('borderTop', 'borderBottom', 'paddingTop', 'paddingBottom');
     }
-    let value = 0;
+    const parentHeight = this.node.parent.computedHeight;
+    const marginTop = this._caculateMargin('marginTop', parentHeight);
+    const marginBottom = this._caculateMargin('marginBottom', parentHeight);
+    let value = marginTop + marginBottom;
     props.forEach((item) => {
       value += this[item] || 0;
     });

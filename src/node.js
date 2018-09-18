@@ -8,7 +8,7 @@ import {
 
 class Node {
   constructor(config) {
-    this.config = new Config(config);
+    this.config = new Config(config, this);
     this.parent = null;
     this.children = [];
   }

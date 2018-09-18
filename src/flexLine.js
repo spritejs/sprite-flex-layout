@@ -15,6 +15,8 @@ class FlexLine {
     this.mainPos = props.mainPos;
     this.crossSize = props.crossSize;
     this.crossComputedSize = props.crossComputedSize;
+    this.crossMarginStart = props.crossMarginStart;
+    this.crossMarginEnd = props.crossMarginEnd;
   }
 
   /**
@@ -41,7 +43,30 @@ class FlexLine {
     return result;
   }
 
+  parseAutoCrossMargin(item, crossSize) {
+    const startAuto = item[this.crossMarginStart] === 'auto';
+    const endAuto = item[this.crossMarginEnd] === 'auto';
+    if(this.alignContent === 'stretch') {
+      crossSize += this.crossSpace;
+    }
+    if(startAuto || endAuto) {
+      const layoutSize = item[this.crossLayoutSize];
+      let size = 0;
+      if(startAuto && endAuto) {
+        size = (crossSize - layoutSize) / 2;
+      } else if(startAuto) {
+        size = crossSize - layoutSize;
+      }
+      item[this.mainPos] = this.crossPosition + size;
+      return true;
+    }
+    return false;
+  }
+
   parseItemAlignSelf(item, crossSize) {
+    // has auto value in margin on cross axis
+    if(this.parseAutoCrossMargin(item, crossSize)) return;
+
     let alignSelf = item.alignSelf;
     if(alignSelf === 'auto') {
       alignSelf = item.parent.alignSelf;
@@ -67,7 +92,12 @@ class FlexLine {
       default:
         break;
     }
-    item[this.mainPos] = this.crossPosition + crossPosition;
+    let pos = this.crossPosition + crossPosition;
+    const marginStart = item[this.crossMarginStart];
+    if(marginStart && marginStart !== 'auto') {
+      pos += marginStart;
+    }
+    item[this.mainPos] = pos;
   }
 
   parseAlignSelf(crossSize = 0) {
@@ -77,7 +107,7 @@ class FlexLine {
   }
 
   parseJustifyContent() {
-
+    
   }
 }
 
