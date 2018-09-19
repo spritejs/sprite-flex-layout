@@ -22,7 +22,7 @@ class FlexLine {
   get mainAxisSize() {
     let value = 0;
     this.items.forEach((item) => {
-      value += item[this.mainLayoutSize];
+      value += item[this.mainLayoutSize] || 0;
     });
     return value;
   }
@@ -33,7 +33,7 @@ class FlexLine {
   get crossAxisSize() {
     if(this[CROSS_AXIS_SIZE]) return this[CROSS_AXIS_SIZE];
     const values = this.items.map((item) => {
-      return item[this.crossLayoutSize];
+      return item[this.crossLayoutSize] || 0;
     });
     const result = Math.max(...values);
     this[CROSS_AXIS_SIZE] = result;
@@ -115,20 +115,83 @@ class FlexLine {
     });
   }
 
+  parseByFlexGrow(space) {
+    let grow = 0;
+    let max = 0;
+    const items = [];
+    this.items.forEach((item) => {
+      grow += item.flexGrow || 0;
+      items.push({max: item[this.mainMaxSize], grow: item.flexGrow});
+      if(item[this.mainMaxSize]) {
+        max++;
+      }
+    });
+    while(true) {
+      const itemSpace = space / grow;
+      if(!max) {
+        let flag = false;
+        items.forEach((item, index) => {
+          if(item.grow) {
+            const increSpace = Math.round(item.grow * itemSpace);
+            this.items[index][this.mainSize] = this.items[index][this.mainComputedSize] + increSpace;
+            space -= increSpace;
+            flag = true;
+          }
+        });
+        if(flag) {
+          space = 0;
+        }
+        break;
+      }
+      let flag = false;
+      items.forEach((item, index) => {
+        if(item.max && item.grow) {
+          const leaveSpace = item.max - this.items[index][this.mainComputedSize];
+          if(itemSpace > leaveSpace) {
+            this.items[index][this.mainSize] = item.max;
+            space -= leaveSpace;
+            grow -= item.grow;
+            delete item.max;
+            delete item.grow;
+            flag = true;
+          }
+        }
+      });
+      if(!grow) break;
+      if(!flag) {
+        max = 0;
+      }
+    }
+    return parseInt(space, 10);
+  }
+
+  parseByMarginAuto(space) {
+
+  }
+
+  parseByJustifyContent(space) {
+
+  }
+
   hasFlexShrink() {
     return this.items.some((item) => {
       return item.flexShrink;
     });
   }
 
-  parseJustifyContent() {
+  parseMainAxis() {
     const mainSize = this.container[this.mainSize];
     const mainAxisSize = this.mainAxisSize;
-    const space = mainSize - mainAxisSize;
+    let space = mainSize - mainAxisSize;
     if(space > 0) {
       if(this.hasFlexGrow()) {
-
+        space = this.parseByFlexGrow(space);
+        if(!space) return;
       }
+      if(this.hasMarginAutoInMainAxis()) {
+        return this.parseByMarginAuto(space);
+      }
+      return this.parseByJustifyContent(space);
     }
   }
 }

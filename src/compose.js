@@ -131,16 +131,16 @@ class Compose {
     }
   }
 
-  parseJustifyContent() {
+  parseMainAxis() {
     this.flexLines.forEach((line) => {
-      line.parseJustifyContent();
+      line.parseMainAxis();
     });
   }
 
   compose() {
     this.parseAlignContent();
     this.parseAlignSelf();
-    this.parseJustifyContent();
+    this.parseMainAxis();
     this.computeContainerSize();
   }
 }

@@ -93,7 +93,7 @@ class Config {
   }
 
   [PARSE_PERCENT_VALUE](value, prop = 'width') {
-    if(typeof value === 'number' || !value) return value;
+    if(typeof value === 'number' || !value) return value || 0;
     const percent = parsePercentValue(value);
     if(percent) {
       let parentValue = prop;
@@ -111,7 +111,6 @@ class Config {
   [CACLUTE_MARGIN](prop, parentValue) {
     let value = this[prop];
     if(value === 'auto') return 0;
-
     value = this[PARSE_PERCENT_VALUE](value, parentValue);
     this[prop] = value;
     return value;
