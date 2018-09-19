@@ -90,7 +90,7 @@ class FlexLine {
         break;
     }
     const pos = this.crossPosition + crossPosition;
-    item[this.crossPos] = pos + this._getMarginStart(item, this.crossMarginStart);
+    item[this.crossPos] = pos + this._getMarginValue(item[this.crossMarginStart]);
   }
 
   parseAlignSelf(crossSize = 0) {
@@ -161,17 +161,16 @@ class FlexLine {
     if(!space) {
       let pos = 0;
       this.items.forEach((item) => {
-        item[this.mainPos] = pos + this._getMarginStart(item, this.mainMarginStart);
+        item[this.mainPos] = pos + this._getMarginValue(item[this.mainMarginStart]);
         pos += item[this.mainComputedSize];
       });
     }
     return parseInt(space, 10);
   }
 
-  _getMarginStart(item, type) {
-    const margin = item[type];
-    if(margin && margin !== 'auto') return margin;
-    return 0;
+  _getMarginValue(value, autoValue = 0) {
+    if(value === 'auto') return autoValue;
+    return value || 0;
   }
 
   parseByMarginAuto(space) {
@@ -187,18 +186,9 @@ class FlexLine {
     const itemSpace = space / marginAutoNum;
     let pos = 0;
     this.items.forEach((item) => {
-      let marginStart = item[this.mainMarginStart];
-      if(marginStart === 'auto') {
-        marginStart = itemSpace;
-      }
-      pos += marginStart;
+      pos += this._getMarginValue(item[this.mainMarginStart], itemSpace);
       item[this.mainPos] = pos;
-      pos += item[this.mainComputedSize];
-      let marginEnd = item[this.mainMarginEnd];
-      if(marginEnd === 'auto') {
-        marginEnd = itemSpace;
-      }
-      pos += marginEnd;
+      pos += item[this.mainComputedSize] + this._getMarginValue(item[this.mainMarginEnd], itemSpace);
     });
   }
 
