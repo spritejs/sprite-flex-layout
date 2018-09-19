@@ -109,14 +109,27 @@ class FlexLine {
     });
   }
 
+  hasFlexGrow() {
+    return this.items.some((item) => {
+      return item.flexGrow;
+    });
+  }
+
+  hasFlexShrink() {
+    return this.items.some((item) => {
+      return item.flexShrink;
+    });
+  }
 
   parseJustifyContent() {
     const mainSize = this.container[this.mainSize];
     const mainAxisSize = this.mainAxisSize;
     const space = mainSize - mainAxisSize;
     if(space > 0) {
+      if(this.hasFlexGrow()) {
 
-    } 
+      }
+    }
   }
 }
 
