@@ -18,7 +18,7 @@ class Node {
   }
 
   set parent(node) {
-    this.parent = node;
+    this[PARENT] = node;
     this.config.container = node;
   }
 
@@ -37,7 +37,7 @@ class Node {
   }
 
   getComputedLayout() {
-    const layout = new Layout(this.left, this.right, this.top, this.bottom, this.width, this.height);
+    const layout = new Layout(this.left, this.top, this.width, this.height);
     return layout;
   }
 
