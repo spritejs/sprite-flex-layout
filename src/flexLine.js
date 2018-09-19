@@ -46,10 +46,10 @@ class FlexLine {
   parseAutoCrossMargin(item, crossSize) {
     const startAuto = item[this.crossMarginStart] === 'auto';
     const endAuto = item[this.crossMarginEnd] === 'auto';
-    if(this.alignContent === 'stretch') {
-      crossSize += this.crossSpace;
-    }
     if(startAuto || endAuto) {
+      if(this.alignContent === 'stretch') {
+        crossSize += this.crossSpace;
+      }
       const layoutSize = item[this.crossLayoutSize];
       let size = 0;
       if(startAuto && endAuto) {
@@ -107,7 +107,7 @@ class FlexLine {
   }
 
   parseJustifyContent() {
-    
+
   }
 }
 

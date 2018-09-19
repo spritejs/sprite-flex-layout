@@ -15,10 +15,16 @@ import {
 
 const WIDTH = Symbol('width');
 const HEIGHT = Symbol('height');
+const FLEX = Symbol('flex');
+const FLEX_FLOW = Symbol('flex-flow');
+const CACLUTE_MARGIN = Symbol('caculate-margin');
+const GET_FLEX_BASIS = Symbol('get-flex-basis');
+
 class Config {
-  constructor(config = {}, node) {
+  constructor(config = {}, node, container) {
     this.config = {};
     this.node = node;
+    this.container = container;
     Object.keys(config).forEach((item) => {
       if(!flexProperties.includes(item)) {
         throw new Error(`config ${item} is not valid`);
@@ -75,15 +81,20 @@ class Config {
     this.marginLeft = value[3];
   }
 
-  /**
-   * @TODO
-   */
-  set flex(value) {
-    this.config._flex = value;
-    return this;
+  get flex() {
+    return this[FLEX];
   }
 
-  _caculateMargin(prop, parentValue) {
+  set flex(value) {
+    this[FLEX] = value;
+    if(value === 'none') return;
+    if(typeof value === 'number') {
+      this.flexGrow = value;
+      this.flexShrink = 1;
+    }
+  }
+
+  [CACLUTE_MARGIN](prop, parentValue) {
     const value = this[prop];
     if(value === 'auto') return 0;
     // percent value
@@ -98,11 +109,22 @@ class Config {
     return value || 0;
   }
 
+  [GET_FLEX_BASIS](type = 'width') {
+    const flexDirection = this.container.flexDirection;
+    const flexBaxis = this.flexBaxis;
+    if(flexBaxis && flexBaxis !== 'auto') {
+      const isRow = flexDirection === 'row' || flexDirection === 'row-reverse';
+      if(type === 'width' && isRow || type === 'height' && !isRow) {
+        return flexBaxis;
+      }
+    }
+  }
+
   get layoutWidth() {
     // if(this[LAYOUT_WIDTH]) return this[LAYOUT_WIDTH];
-    let width = this.computedWidth || 0;
-    const minWidth = this.minWidth || 0;
-    const maxWidth = this.maxWidth || 0;
+    let width = this[GET_FLEX_BASIS]('width') || this.computedWidth || 0;
+    const minWidth = this.minWidth;
+    const maxWidth = this.maxWidth;
     if(minWidth && width < minWidth) {
       width = minWidth;
     }
@@ -115,8 +137,8 @@ class Config {
       props.push('borderLeft', 'borderRight', 'paddingLeft', 'paddingRight');
     }
     const parentWidth = this.node.parent.computedWidth;
-    const marginLeft = this._caculateMargin('marginLeft', parentWidth);
-    const marginRight = this._caculateMargin('marginRight', parentWidth);
+    const marginLeft = this[CACLUTE_MARGIN]('marginLeft', parentWidth);
+    const marginRight = this[CACLUTE_MARGIN]('marginRight', parentWidth);
     let value = marginLeft + marginRight;
     props.forEach((item) => {
       value += this[item] || 0;
@@ -127,7 +149,7 @@ class Config {
 
   get layoutHeight() {
     // if(this[LAYOUT_HEIGHT]) return this[LAYOUT_HEIGHT];
-    let height = this.computedHeight || 0;
+    let height = this[GET_FLEX_BASIS]('height') || this.computedHeight || 0;
     const minHeight = this.minHeight || 0;
     const maxHeight = this.maxHeight || 0;
     if(minHeight && height < minHeight) {
@@ -142,8 +164,8 @@ class Config {
       props.push('borderTop', 'borderBottom', 'paddingTop', 'paddingBottom');
     }
     const parentHeight = this.node.parent.computedHeight;
-    const marginTop = this._caculateMargin('marginTop', parentHeight);
-    const marginBottom = this._caculateMargin('marginBottom', parentHeight);
+    const marginTop = this[CACLUTE_MARGIN]('marginTop', parentHeight);
+    const marginBottom = this[CACLUTE_MARGIN]('marginBottom', parentHeight);
     let value = marginTop + marginBottom;
     props.forEach((item) => {
       value += this[item] || 0;
@@ -153,7 +175,7 @@ class Config {
   }
 
   get flexFlow() {
-    return this.config._flexFlow;
+    return this[FLEX_FLOW];
   }
 
   set flexFlow(value) {
@@ -167,8 +189,7 @@ class Config {
         throw new Error(`FlexFlow: ${value} is not valid`);
       }
     });
-    this.config._flexFlow = value;
-    return this;
+    this[FLEX_FLOW] = value;
   }
 
   get width() {

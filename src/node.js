@@ -5,12 +5,21 @@ import {
   flexProperties,
 } from './util';
 
+const PARENT = Symbol('parent');
 
 class Node {
   constructor(config) {
     this.config = new Config(config, this);
-    this.parent = null;
     this.children = [];
+  }
+
+  get parent() {
+    return this[PARENT];
+  }
+
+  set parent(node) {
+    this.parent = node;
+    this.config.container = node;
   }
 
   insertChild(node) {
