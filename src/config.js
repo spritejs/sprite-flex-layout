@@ -93,7 +93,7 @@ class Config {
   }
 
   [PARSE_PERCENT_VALUE](value, prop = 'width') {
-    if(typeof value === 'number' || !value) return value || 0;
+    if(typeof value === 'number' || value === 'auto' || !value) return value || 0;
     const percent = parsePercentValue(value);
     if(percent) {
       let parentValue = prop;
@@ -109,10 +109,8 @@ class Config {
   }
 
   [CACLUTE_MARGIN](prop, parentValue) {
-    let value = this[prop];
+    const value = this[prop];
     if(value === 'auto') return 0;
-    value = this[PARSE_PERCENT_VALUE](value, parentValue);
-    this[prop] = value;
     return value;
   }
 
@@ -249,14 +247,14 @@ Object.keys(properties).forEach((property) => {
 
 
 const supportPercentProps = {
-  width: ['min-width', 'max-width', 'margin-left', 'margin-right', 'padding-left', 'padding-right'],
-  height: ['min-height', 'max-height', 'margin-top', 'margin-bottom', 'padding-top', 'padding-bottom'],
+  width: ['minWidth', 'maxWidth', 'marginLeft', 'marginRight', 'paddingLeft', 'paddingRight'],
+  height: ['minHeight', 'maxHeight', 'marginTop', 'marginBottom', 'paddingTop', 'paddingBottom'],
 };
 Object.keys(supportPercentProps).forEach((prop) => {
   supportPercentProps[prop].forEach((item) => {
     Object.defineProperty(Config.prototype, item, {
       get() {
-        return this.config[item];
+        return this.config[item] || 0;
       },
       set(value) {
         value = this[PARSE_PERCENT_VALUE](value, prop);

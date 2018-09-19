@@ -54,7 +54,7 @@ class FlexLine {
       } else if(startAuto) {
         size = crossSize - layoutSize;
       }
-      item[this.mainPos] = this.crossPosition + size;
+      item[this.crossPos] = this.crossPosition + size;
       return true;
     }
     return false;
@@ -89,12 +89,8 @@ class FlexLine {
       default:
         break;
     }
-    let pos = this.crossPosition + crossPosition;
-    const marginStart = item[this.crossMarginStart];
-    if(marginStart && marginStart !== 'auto') {
-      pos += marginStart;
-    }
-    item[this.mainPos] = pos;
+    const pos = this.crossPosition + crossPosition;
+    item[this.crossPos] = pos + this._getMarginStart(item, this.crossMarginStart);
   }
 
   parseAlignSelf(crossSize = 0) {
@@ -162,11 +158,48 @@ class FlexLine {
         max = 0;
       }
     }
+    if(!space) {
+      let pos = 0;
+      this.items.forEach((item) => {
+        item[this.mainPos] = pos + this._getMarginStart(item, this.mainMarginStart);
+        pos += item[this.mainComputedSize];
+      });
+    }
     return parseInt(space, 10);
   }
 
-  parseByMarginAuto(space) {
+  _getMarginStart(item, type) {
+    const margin = item[type];
+    if(margin && margin !== 'auto') return margin;
+    return 0;
+  }
 
+  parseByMarginAuto(space) {
+    let marginAutoNum = 0;
+    this.items.forEach((item) => {
+      if(item[this.mainMarginStart] === 'auto') {
+        marginAutoNum++;
+      }
+      if(item[this.mainMarginEnd] === 'auto') {
+        marginAutoNum++;
+      }
+    });
+    const itemSpace = space / marginAutoNum;
+    let pos = 0;
+    this.items.forEach((item) => {
+      let marginStart = item[this.mainMarginStart];
+      if(marginStart === 'auto') {
+        marginStart = itemSpace;
+      }
+      pos += marginStart;
+      item[this.mainPos] = pos;
+      pos += item[this.mainComputedSize];
+      let marginEnd = item[this.mainMarginEnd];
+      if(marginEnd === 'auto') {
+        marginEnd = itemSpace;
+      }
+      pos += marginEnd;
+    });
   }
 
   parseByJustifyContent(space) {
