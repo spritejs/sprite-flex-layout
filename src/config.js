@@ -7,6 +7,7 @@ import {
   alignSelfValues,
   alignContentValues,
   parseCombineValue,
+  parsePercentValue,
 } from './util';
 
 
@@ -21,10 +22,9 @@ const CACLUTE_MARGIN = Symbol('caculate-margin');
 const GET_FLEX_BASIS = Symbol('get-flex-basis');
 
 class Config {
-  constructor(config = {}, node, container) {
+  constructor(config = {}, node) {
     this.config = {};
     this.node = node;
-    this.container = container;
     Object.keys(config).forEach((item) => {
       if(!flexProperties.includes(item)) {
         throw new Error(`config ${item} is not valid`);
@@ -91,18 +91,21 @@ class Config {
     if(typeof value === 'number') {
       this.flexGrow = value;
       this.flexShrink = 1;
+      this.flexBaxis = '0%';
     }
   }
 
   [CACLUTE_MARGIN](prop, parentValue) {
     const value = this[prop];
     if(value === 'auto') return 0;
+
+    const percentValue = parsePercentValue(value);
     // percent value
-    if(/%$/.test(value)) {
+    if(percentValue) {
       if(!parentValue) {
         throw new Error('parent node width & height must be set when margin value is precent');
       }
-      const ret = parentValue * parseFloat(value, 10);
+      const ret = parentValue * percentValue;
       this[prop] = ret;
       return ret;
     }
@@ -110,11 +113,19 @@ class Config {
   }
 
   [GET_FLEX_BASIS](type = 'width') {
-    const flexDirection = this.container.flexDirection;
+    const flexDirection = this.node.parent.flexDirection;
     const flexBaxis = this.flexBaxis;
     if(flexBaxis && flexBaxis !== 'auto') {
       const isRow = flexDirection === 'row' || flexDirection === 'row-reverse';
       if(type === 'width' && isRow || type === 'height' && !isRow) {
+        const percentValue = parsePercentValue(flexBaxis);
+        if(percentValue) {
+          const parentValue = this.node.parent[isRow ? 'width' : 'height'];
+          if(!parentValue) {
+            throw new Error('parent node width & height must be set when flex basis is precent');
+          }
+          return parentValue * percentValue;
+        }
         return flexBaxis;
       }
     }

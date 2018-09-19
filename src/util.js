@@ -107,6 +107,11 @@ export function parseCombineValue(value) {
   return value;
 }
 
+export function parsePercentValue(value) {
+  if(!/%$/.test(value)) return false;
+  return 0.01 * parseFloat(value, 10);
+}
+
 export function getProp(flexDirection) {
   if(flexDirection === 'column' || flexDirection === 'column-reverse') {
     return {

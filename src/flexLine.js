@@ -5,18 +5,15 @@ const CROSS_AXIS_SIZE = Symbol('crossAxisSize');
 class FlexLine {
   constructor(items, container) {
     this.items = items;
+    this.container = container;
     this.flexDirection = container.flexDirection;
     this.alignContent = container.alignContent;
     this.crossPosition = 0;
     this.crossSpace = 0;
     const props = getProp(this.flexDirection);
-    this.mainLayoutSize = props.mainLayoutSize;
-    this.crossLayoutSize = props.crossLayoutSize;
-    this.mainPos = props.mainPos;
-    this.crossSize = props.crossSize;
-    this.crossComputedSize = props.crossComputedSize;
-    this.crossMarginStart = props.crossMarginStart;
-    this.crossMarginEnd = props.crossMarginEnd;
+    Object.keys(props).forEach((prop) => {
+      this[prop] = props[prop];
+    });
   }
 
   /**
@@ -106,8 +103,20 @@ class FlexLine {
     });
   }
 
-  parseJustifyContent() {
+  hasMarginAutoInMainAxis() {
+    return this.items.some((item) => {
+      return item[this.mainMarginStart] === 'auto' || item[this.mainMarginEnd] === 'auto';
+    });
+  }
 
+
+  parseJustifyContent() {
+    const mainSize = this.container[this.mainSize];
+    const mainAxisSize = this.mainAxisSize;
+    const space = mainSize - mainAxisSize;
+    if(space > 0) {
+
+    } 
   }
 }
 
