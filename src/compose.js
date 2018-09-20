@@ -1,5 +1,8 @@
 import FlexLine from './flexLine';
-import {getProp} from './util';
+import {
+  getProp,
+  parseSpaceBetween,
+} from './util';
 
 class Compose {
   constructor(container) {
@@ -67,38 +70,11 @@ class Compose {
     this.flexLines.forEach((line) => {
       linesCrossAxisSize += line.crossAxisSize;
     });
-    // magin between lines
-    const linesMarginSize = [];
-    const leftSize = Math.max(crossAxisSize - linesCrossAxisSize, 0);
-    let itemSize = 0;
-    switch (alignContent) {
-      case 'flex-start':
-        break;
-      case 'flex-end':
-        linesMarginSize[0] = crossAxisSize - linesCrossAxisSize;
-        break;
-      case 'center':
-        linesMarginSize[0] = Math.floor(leftSize / 2);
-        break;
-      case 'space-between':
-        itemSize = Math.floor(leftSize / (lineLength - 1));
-        linesMarginSize[0] = 0;
-        break;
-      case 'space-around':
-        itemSize = Math.floor(leftSize / lineLength);
-        linesMarginSize[0] = Math.floor(itemSize / 2);
-        break;
-      case 'space-evenly':
-        itemSize = Math.floor(leftSize / (lineLength + 1));
-        break;
-      default: // default is stretch
-        itemSize = Math.floor(leftSize / lineLength);
-        linesMarginSize[0] = 0;
-        break;
-    }
+    // margin between lines
+    const space = crossAxisSize - linesCrossAxisSize;
+    const linesMarginSize = parseSpaceBetween(space, alignContent, lineLength);
     let crossPosition = 0;
     this.flexLines.forEach((line, index) => {
-      linesMarginSize.push(itemSize);
       crossPosition += linesMarginSize[index] || 0;
       line.crossPosition = crossPosition;
       line.crossSpace = linesMarginSize[index + 1] || 0;

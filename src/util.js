@@ -107,6 +107,50 @@ export function parsePercentValue(value) {
   return 0.01 * parseFloat(value, 10);
 }
 
+/**
+ * parse space between items
+ * @param {Number} space space size
+ * @param {String} type flex-start/flex-end/...
+ * @param {Number} num array size
+ */
+export function parseSpaceBetween(space, type, num) {
+  const marginSize = [];
+  const spaceFix = Math.max(space, 0);
+  const fillFull = (size = 0) => {
+    for(let i = marginSize.length; i < num + 1; i++) {
+      marginSize[i] = size;
+    }
+  };
+  if(type === 'flex-end') {
+    marginSize[0] = space;
+    fillFull();
+  } else if(type === 'center') {
+    const itemSize = spaceFix / 2;
+    marginSize[0] = itemSize;
+    fillFull();
+    marginSize[num] = itemSize;
+  } else if(type === 'space-between') {
+    marginSize[0] = 0;
+    fillFull(spaceFix / (num - 1));
+    marginSize[num] = 0;
+  } else if(type === 'space-around') {
+    const itemSize = spaceFix / num;
+    marginSize[0] = itemSize / 2;
+    fillFull(itemSize);
+    marginSize[num] = itemSize / 2;
+  } else if(type === 'space-evenly') {
+    const itemSize = spaceFix / (num + 1);
+    fillFull(itemSize);
+  } else if(type === 'stretch') {
+    const itemSize = spaceFix / num;
+    marginSize[0] = 0;
+    fillFull(itemSize);
+  } else { // flex-start
+    fillFull();
+  }
+  return marginSize;
+}
+
 export function getProp(flexDirection) {
   if(flexDirection === 'column' || flexDirection === 'column-reverse') {
     return {

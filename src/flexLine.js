@@ -1,4 +1,7 @@
-import {getProp} from './util';
+import {
+  getProp,
+  parseSpaceBetween,
+} from './util';
 
 const CROSS_AXIS_SIZE = Symbol('crossAxisSize');
 
@@ -188,22 +191,45 @@ class FlexLine {
     this.items.forEach((item) => {
       pos += this._getMarginValue(item[this.mainMarginStart], itemSpace);
       item[this.mainPos] = pos;
-      pos += item[this.mainComputedSize] + this._getMarginValue(item[this.mainMarginEnd], itemSpace);
+      pos += item[this.mainComputedSize];
+      pos += this._getMarginValue(item[this.mainMarginEnd], itemSpace);
     });
   }
 
-  parseByJustifyContent(space) {
-
+  parseByJustifyContentPositive(space) {
+    let justifyContent = this.container.justifyContent;
+    const flexDirection = this.container.flexDirection;
+    if(flexDirection === 'row-reverse' || flexDirection === 'column-reverse') {
+      if(justifyContent === 'flex-start') {
+        justifyContent = 'flex-end';
+      } else if(justifyContent === 'flex-end') {
+        justifyContent = 'flex-start';
+      }
+    }
+    const marginSizes = parseSpaceBetween(space, justifyContent, this.items.length);
+    let pos = 0;
+    this.items.forEach((item, index) => {
+      pos += marginSizes[index] || 0;
+      item[this.mainPos] = pos;
+      pos += item[this.mainComputedSize];
+    });
   }
 
-  hasFlexShrink() {
-    return this.items.some((item) => {
-      return item.flexShrink;
-    });
+  parseByJustifyContentNegative(space) {
+
   }
 
   parseMainAxis() {
     const mainSize = this.container[this.mainSize];
+    // container size is not set
+    if(!mainSize) {
+      let pos = 0;
+      this.items.forEach((item) => {
+        item[this.mainPos] = pos;
+        pos += item[this.mainComputedSize];
+      });
+      return;
+    }
     const mainAxisSize = this.mainAxisSize;
     let space = mainSize - mainAxisSize;
     if(space > 0) {
@@ -214,8 +240,9 @@ class FlexLine {
       if(this.hasMarginAutoInMainAxis()) {
         return this.parseByMarginAuto(space);
       }
-      return this.parseByJustifyContent(space);
+      return this.parseByJustifyContentPositive(space);
     }
+    return this.parseByJustifyContentNegative(space);
   }
 }
 
