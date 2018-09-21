@@ -6,11 +6,13 @@ import {
 } from './util';
 
 
+let id = 1;
 class Node {
   constructor(config) {
     this.config = new Config(config, this);
     this.parent = null;
     this.children = [];
+    this.id = `#id${id++}`;
   }
 
   insertChild(node) {

@@ -100,13 +100,13 @@ class Config {
     this.config.flexBaxis = value;
   }
 
-  [PARSE_PERCENT_VALUE](value, prop = 'width') {
+  [PARSE_PERCENT_VALUE](value, parentProp = 'width') {
     if(typeof value === 'number' || value === 'auto' || !value) return value || 0;
     const percent = parsePercentValue(value);
     if(percent) {
-      let parentValue = prop;
-      if(typeof prop === 'string') {
-        parentValue = this.node.parent[prop];
+      let parentValue = parentProp;
+      if(typeof parentProp === 'string') {
+        parentValue = this.node.parent[parentProp];
       }
       if(!parentValue) {
         throw new Error(`parent node width & height must be set when child value is percent(${value})`);
@@ -280,10 +280,13 @@ Object.keys(supportPercentProps).forEach((prop) => {
   supportPercentProps[prop].forEach((item) => {
     Object.defineProperty(Config.prototype, item, {
       get() {
-        return this.config[item] || 0;
+        const value = this[PARSE_PERCENT_VALUE](this.config[item], prop);
+        if(value) {
+          this[item] = value;
+        }
+        return value;
       },
       set(value) {
-        value = this[PARSE_PERCENT_VALUE](value, prop);
         this.config[item] = value;
       },
       enumerable: true,
