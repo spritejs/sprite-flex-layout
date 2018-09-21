@@ -30,7 +30,7 @@ class Node {
   }
 
   getComputedLayout() {
-    const layout = new Layout(this.left, this.top, this.width, this.height);
+    const layout = new Layout(this.id, this.left, this.top, this.width, this.height);
     return layout;
   }
 
