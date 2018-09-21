@@ -114,6 +114,7 @@ class FlexLine {
     });
   }
 
+
   parseByFlexGrow(space) {
     let grow = 0;
     let max = 0;
@@ -121,9 +122,7 @@ class FlexLine {
     this.items.forEach((item) => {
       grow += item.flexGrow || 0;
       items.push({max: item[this.mainMaxSize], grow: item.flexGrow});
-      if(item[this.mainMaxSize]) {
-        max++;
-      }
+      if(item[this.mainMaxSize]) max++;
     });
     while(true) {
       const itemSpace = space / grow;
@@ -146,7 +145,7 @@ class FlexLine {
       items.forEach((item, index) => {
         if(item.max && item.grow) {
           const leaveSpace = item.max - this.items[index][this.mainComputedSize];
-          if(itemSpace > leaveSpace) {
+          if(itemSpace * item.grow > leaveSpace) {
             this.items[index][this.mainSize] = item.max;
             space -= leaveSpace;
             grow -= item.grow;
@@ -196,7 +195,7 @@ class FlexLine {
     });
   }
 
-  parseByJustifyContentPositive(space) {
+  parseJustifyContent() {
     let justifyContent = this.container.justifyContent;
     const flexDirection = this.container.flexDirection;
     if(flexDirection === 'row-reverse' || flexDirection === 'column-reverse') {
@@ -206,6 +205,11 @@ class FlexLine {
         justifyContent = 'flex-start';
       }
     }
+    return justifyContent;
+  }
+
+  parseByJustifyContentPositive(space) {
+    const justifyContent = this.parseJustifyContent();
     const marginSizes = parseSpaceBetween(space, justifyContent, this.items.length);
     let pos = 0;
     this.items.forEach((item, index) => {
@@ -216,7 +220,52 @@ class FlexLine {
   }
 
   parseByJustifyContentNegative(space) {
-
+    let shrink = 0;
+    let min = 0;
+    const items = [];
+    this.items.forEach((item) => {
+      shrink += item.flexShrink;
+      items.push({min: item[this.mainMinSize], shrink: item.flexShrink});
+      if(item[this.mainMinSize]) min++;
+    });
+    while(true) {
+      const itemSpace = (0 - space) / shrink;
+      if(!min) {
+        items.forEach((item, index) => {
+          if(item.shrink) {
+            const decreSpace = item.shrink * itemSpace;
+            this.items[index][this.mainSize] = this.items[index][this.mainComputedSize] - decreSpace;
+            space += decreSpace;
+          }
+        });
+        break;
+      }
+      let flag = false;
+      items.forEach((item, index) => {
+        if(item.min) {
+          const leaveSpace = this.items[index][this.mainComputedSize] - item.min;
+          if(itemSpace * item.shrink > leaveSpace) {
+            this.items[index][this.mainSize] = item.min;
+            space += leaveSpace;
+            shrink -= item.shrink;
+            delete item.min;
+            delete item.shrink;
+            flag = true;
+          }
+        }
+      });
+      if(!flag) {
+        min = 0;
+      }
+    }
+    const justifyContent = this.parseJustifyContent();
+    const marginSizes = parseSpaceBetween(space, justifyContent, this.items.length);
+    let pos = 0;
+    this.items.forEach((item, index) => {
+      pos += marginSizes[index] || 0;
+      item[this.mainPos] = pos;
+      pos += item[this.mainComputedSize];
+    });
   }
 
   parseMainAxis() {

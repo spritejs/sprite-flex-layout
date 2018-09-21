@@ -85,6 +85,14 @@ class Config {
     return this.config.flexBaxis;
   }
 
+  get flexShrink() {
+    return this.config.flexShrink || 1;
+  }
+
+  set flexShrink(value) {
+    this.config.flexShrink = value;
+  }
+
   set flexBaxis(value) {
     const flexDirection = this.node.parent.flexDirection;
     const isRow = flexDirection === 'row' || flexDirection === 'row-reverse';
@@ -126,8 +134,7 @@ class Config {
     }
   }
 
-  get layoutWidth() {
-    // if(this[LAYOUT_WIDTH]) return this[LAYOUT_WIDTH];
+  get contentBoxWidth() {
     let width = this[GET_FLEX_BASIS]('width') || this.computedWidth || 0;
     const minWidth = this.minWidth;
     const maxWidth = this.maxWidth;
@@ -137,6 +144,16 @@ class Config {
     if(maxWidth && width > maxWidth) {
       width = maxWidth;
     }
+    // seto computedWidth?
+    if(width && width !== this.computedWidth) {
+      this.computedWidth = width;
+    }
+    return width;
+  }
+
+  get layoutWidth() {
+    // if(this[LAYOUT_WIDTH]) return this[LAYOUT_WIDTH];
+    const width = this.contentBoxWidth;
 
     const props = [];
     if(this.boxSizing !== 'border-box') {
@@ -153,8 +170,7 @@ class Config {
     return width + value;
   }
 
-  get layoutHeight() {
-    // if(this[LAYOUT_HEIGHT]) return this[LAYOUT_HEIGHT];
+  get contentBoxHeight() {
     let height = this[GET_FLEX_BASIS]('height') || this.computedHeight || 0;
     const minHeight = this.minHeight || 0;
     const maxHeight = this.maxHeight || 0;
@@ -164,6 +180,16 @@ class Config {
     if(maxHeight && height > maxHeight) {
       height = maxHeight;
     }
+    // set to computedHeight?
+    if(height && height !== this.computedHeight) {
+      this.computedHeight = height;
+    }
+    return height;
+  }
+
+  get layoutHeight() {
+    // if(this[LAYOUT_HEIGHT]) return this[LAYOUT_HEIGHT];
+    const height = this.contentBoxHeight;
 
     const props = [];
     if(this.boxSizing !== 'border-box') {
