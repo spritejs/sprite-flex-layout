@@ -84,7 +84,8 @@ class FlexLine {
       case 'stretch':
         // stretch item cross size
         if(this.alignContent === 'stretch' && itemCrossSize === undefined && this.crossSpace) {
-          item[this.crossSize] = item[this.crossComputedSize] + this.crossSpace;
+          const maxSize = item[this.crossMaxSize] || 0;
+          item[this.crossSize] = Math.max(item[this.crossComputedSize] + this.crossSpace, maxSize);
         }
         break;
       case 'baseline':
@@ -209,6 +210,10 @@ class FlexLine {
   }
 
   parseByJustifyContentPositive(space) {
+    return this.parseByJustifyContentSpace(space);
+  }
+
+  parseByJustifyContentSpace(space) {
     const justifyContent = this.parseJustifyContent();
     const marginSizes = parseSpaceBetween(space, justifyContent, this.items.length);
     let pos = 0;
@@ -258,14 +263,7 @@ class FlexLine {
         min = 0;
       }
     }
-    const justifyContent = this.parseJustifyContent();
-    const marginSizes = parseSpaceBetween(space, justifyContent, this.items.length);
-    let pos = 0;
-    this.items.forEach((item, index) => {
-      pos += marginSizes[index] || 0;
-      item[this.mainPos] = pos;
-      pos += item[this.mainComputedSize];
-    });
+    this.parseByJustifyContentSpace(space);
   }
 
   parseMainAxis() {
