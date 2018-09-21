@@ -69,7 +69,7 @@ class FlexLine {
 
     let alignSelf = item.alignSelf;
     if(alignSelf === 'auto') {
-      alignSelf = item.parent.alignSelf;
+      alignSelf = item.parent.alignItems;
     }
     const layoutSize = item[this.crossLayoutSize];
     const itemCrossSize = item[this.crossSize];
@@ -85,7 +85,7 @@ class FlexLine {
         // stretch item cross size
         if(this.alignContent === 'stretch' && itemCrossSize === undefined && this.crossSpace) {
           const maxSize = item[this.crossMaxSize] || 0;
-          item[this.crossSize] = Math.max(item[this.crossComputedSize] + this.crossSpace, maxSize);
+          item[this.crossSize] = Math.max(this.crossAxisSize + this.crossSpace, maxSize);
         }
         break;
       case 'baseline':
