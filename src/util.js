@@ -9,6 +9,7 @@ export const flexProperties = [
   'alignSelf',
   'flexShrink',
   'flexBasis',
+  'flexGrow',
   'maxHeight',
   'maxWidth',
   'minHeight',

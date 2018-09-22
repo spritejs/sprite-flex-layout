@@ -15,7 +15,7 @@ class Node {
     this.id = `#id${id++}`;
   }
 
-  insertChild(node) {
+  appendChild(node) {
     node.parent = this;
     this.children.push(node);
     return this;

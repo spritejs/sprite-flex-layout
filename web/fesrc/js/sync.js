@@ -11,6 +11,7 @@ export default class Sync {
     this.needError = needError
     this.tipFn = tipFn
   }
+
   /**
    * GET 方法
    * @param {String} path   [请求地址]
@@ -27,6 +28,7 @@ export default class Sync {
     }, option)
     return $.ajax(options).then(this.done, this.fail)
   }
+
   /**
    * [POST 方法]
    * @param {String} path   [请求地址]
@@ -34,7 +36,7 @@ export default class Sync {
    * @param {Object} option [ajax选项]
    */
   POST(path, param = {}, option = {}, method) {
-    param.token = SD.token;
+    // param.token = SD.token;
     const options = Object.assign({
       url: this.prefix + path,
       type: method || 'POST',
@@ -43,9 +45,11 @@ export default class Sync {
     }, option)
     return $.ajax(options).then((...args) => this.done(...args), (...args) => this.fail(...args))
   }
+
   PUT(path, param, option) {
     return this.POST(path, param, option, 'PUT');
   }
+
   /**
    * [DELETE 方法]
    * @param {String} path   [请求地址]
@@ -55,11 +59,12 @@ export default class Sync {
     const options = Object.assign({
       url: this.prefix + path,
       type: 'DELETE',
-      data: {token: SD.token},
+      // data: {token: SD.token},
       contentType: false
     }, option)
     return $.ajax(options).then((...args) => this.done(...args), (...args) => this.fail(...args))
   }
+
   /**
    * [POST 方法]
    * @param {String} path   [请求地址]
@@ -67,7 +72,7 @@ export default class Sync {
    * @param {Object} option [ajax选项]
    */
   FORMDATA(path, formdata, option = {}) {
-    formdata.append('token', SD.token);
+    // formdata.append('token', SD.token);
     const options = Object.assign({
       url: this.prefix + path,
       type: 'POST',
@@ -77,6 +82,7 @@ export default class Sync {
     }, option)
     return $.ajax(options).then((...args) => this.done(...args), (...args) => this.fail(...args))
   }
+
   // 成功后的默认回调，会将所有data返回
   // 并且在失败的时候弹出失败信息
   done(data, status, xhr) {
@@ -93,12 +99,13 @@ export default class Sync {
       return resolve(data.data)
     })
   }
+
   // 失败的时候的默认回调
   fail(xhr, errorType, error) {
     return new Promise((resolve, reject) => {
-      console.error(errorType, error)
-      this.tipFn && this.tipFn(error || '网络故障～～')
-      throw new Error(error || '网络故障~~')
-    })
+      console.error(errorType, error);
+      this.tipFn && this.tipFn(error || '网络故障～～');
+      throw new Error(error || '网络故障~~');
+    });
   }
 }
