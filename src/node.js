@@ -34,6 +34,14 @@ class Node {
     return layout;
   }
 
+  getAllComputedLayout() {
+    const layout = this.getComputedLayout();
+    layout.children = this.children.map((item) => {
+      return item.getComputedLayout();
+    });
+    return layout;
+  }
+
   static create(config) {
     return new Node(config);
   }
