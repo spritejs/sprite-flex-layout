@@ -7,11 +7,11 @@ import {
 class Compose {
   constructor(container) {
     this.container = container;
-    this.flexLines = this.parseFlexLines(container.children);
     const props = getProp(container.flexDirection);
     Object.keys(props).forEach((prop) => {
       this[prop] = props[prop];
     });
+    this.flexLines = this.parseFlexLines(container.children);
   }
 
   /**
