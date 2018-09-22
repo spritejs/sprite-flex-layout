@@ -1,5 +1,5 @@
 <template>
-<div style="display:flex;flex-direction:column;height:100vh">
+<div style="display:flex;flex-direction:column;height:100vh" @click="changeStatus">
   <div style="padding:20px;background:#fff;">
     <el-checkbox v-model="renderFlex">浏览器Flex渲染</el-checkbox>
     <el-checkbox v-model="renderAbsolute">计算出的样式渲染</el-checkbox>
@@ -8,8 +8,8 @@
     <el-button type="danger" :disabled="canDisabled" @click="deleteFlexItem">删除元素</el-button>
   </div>
   <div class="flex-container" :style="flexWrapStyle">
-    <div v-if="renderFlex" class="shadow flex-render-container flex-render-flex" :style="flexContainerStyle" :class="flexContainerActive" @click="editFlexContainer">
-      <div class="shadow" :class="itemActiveClass(index)" @click="editFlexItem(index, $event)" v-for="(item, index) in flexItems" :style="getFlexItemStyle(index)" v-bind:key="index + 1">
+    <div v-if="renderFlex" class="shadow flex-render-container flex-render-flex" :style="flexContainerStyle" :class="flexContainerActive" @click="editFlexContainer($event)">
+      <div class="shadow flex-item" :class="itemActiveClass(index)" @click="editFlexItem(index, $event)" v-for="(item, index) in flexItems" :style="getFlexItemStyle(index)" v-bind:key="index + 1">
         {{index + 1}}
       </div>
     </div>
@@ -20,6 +20,24 @@
 <script>
 import event from './event.js';
 import Vue from 'vue';
+
+const backgroundColors = [
+  '#fff',
+  '#4cb4e7',
+  '#ffc09f',
+  '#ffee93',
+  '#e2dbbe',
+  '#a3a380',
+  '#DB9019',
+  '#5ED5D1',
+  '#1A2D27',
+  '#FF6E97',
+  '#F1AAA6',
+  '#F6D6FF',
+  '#B85A9A',
+  '#9DD3FA',
+  '#DFB5B7'
+]
 export default {
   data() {
     return {
@@ -56,6 +74,11 @@ export default {
     event.$off('changeFlexItemProperties', this.changeFlexItemProperties);
   },
   methods: {
+    changeStatus() {
+      this.activeIndex = -1;
+      this.flexContainerActive = '';
+      event.$emit('showFlexAside', '', {})
+    },
     addFlexItem() {
       const index = this.activeIndex;
       this.activeIndex = this.flexItems.length;
@@ -67,7 +90,7 @@ export default {
       Vue.delete(this.flexItems, this.activeIndex);
       this.activeIndex = -1;
     },
-    parseStyle(props) {
+    parseStyle(props, index) {
       const ret = {};
       const p = [
         'width', 'min-width', 'max-width', 'height', 'min-height', 'max-height',
@@ -78,15 +101,19 @@ export default {
 
       Object.keys(props).forEach((item) => {
         if(!props[item]) return;
-        const newItem = item.replace(/[A-Z]/g, a => {
+        let newItem = item.replace(/[A-Z]/g, a => {
           return '-' + a.toLowerCase()
         });
         if(p.includes(newItem)) {
+          if(newItem.startsWith('border-')) {
+            newItem += '-width';
+          }
           ret[newItem] = props[item] + 'px'
         } else {
           ret[newItem] = props[item];
         }
       })
+      ret['background-color'] = backgroundColors[index];
       return ret;
     },
     itemActiveClass(index) {
@@ -101,7 +128,7 @@ export default {
     },
     getFlexItemStyle(index) {
       const item = this.flexItems[index];
-      const properties = this.parseStyle(item);
+      const properties = this.parseStyle(item, index + 1);
       return properties;
     },
     changeFlexItemProperties(properties) {
@@ -116,9 +143,10 @@ export default {
         height: properties.height + 'px',
         minHeight: properties.height + 'px',
       };
-      this.flexContainerStyle = this.parseStyle(properties);
+      this.flexContainerStyle = this.parseStyle(properties, 0);
     },
-    editFlexContainer() {
+    editFlexContainer(evt) {
+      evt.stopPropagation();
       if(this.flexContainerActive === 'flex-active') return;
       this.flexContainerActive = 'flex-active';
       this.activeIndex = -1;

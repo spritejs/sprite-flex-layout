@@ -215,7 +215,7 @@ export default {
         Object.keys(data).forEach((item) => {
           this.flexContainer[item] = data[item];
         });
-      } else {
+      } else if(type === 'item') {
         Object.keys(data).forEach((item) => {
           this.flexItem[item] = data[item];
         });
