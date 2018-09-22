@@ -105,6 +105,7 @@ export default {
       })
     },
     changeStatus() {
+      return;
       this.activeIndex = -1;
       this.flexContainerActive = '';
       event.$emit('showFlexAside', '', {})
@@ -141,7 +142,7 @@ export default {
           if(newItem.startsWith('border-')) {
             newItem += '-width';
           }
-          ret[newItem] = props[item] + 'px'
+          ret[newItem] = /^[\d\.]+$/.test(props[item]) ? props[item] + 'px' : props[item];
         } else {
           ret[newItem] = props[item];
         }
