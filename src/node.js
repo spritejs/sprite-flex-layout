@@ -12,10 +12,13 @@ class Node {
     this.config = new Config(config, this);
     this.parent = null;
     this.children = [];
-    this.id = `#id${id++}`;
+    this.id = id++;
   }
 
   appendChild(node) {
+    if(!(node instanceof Node)) {
+      throw new Error('appended Child must be instance of Node');
+    }
     node.parent = this;
     this.children.push(node);
     return this;
@@ -30,13 +33,15 @@ class Node {
   }
 
   getComputedLayout() {
-    const layout = new Layout(this.id, this.left, this.top, this.width, this.height);
+    const layout = new Layout(this.left, this.top, this.width, this.height);
     return layout;
   }
 
   getAllComputedLayout() {
     const layout = this.getComputedLayout();
-    layout.children = this.children.map((item) => {
+    layout.children = this.children.sort((a, b) => {
+      return a.id > b.id ? 1 : -1;
+    }).map((item) => {
       return item.getComputedLayout();
     });
     return layout;

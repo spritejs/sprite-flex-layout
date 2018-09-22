@@ -1,6 +1,5 @@
 class Layout {
-  constructor(id, left, top, width, height) {
-    this.id = id;
+  constructor(left, top, width, height) {
     this.left = left || 0;
     this.top = top || 0;
     this.width = width || 0;

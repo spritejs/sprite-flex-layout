@@ -6,6 +6,7 @@
 
     <el-button type="primary" style="margin-left:50px;" @click="addFlexItem">添加元素</el-button>
     <el-button type="danger" :disabled="canDisabled" @click="deleteFlexItem">删除元素</el-button>
+    <el-button type="success" @click="addTestCase">添加到测试用例</el-button>
   </div>
   <div class="flex-container" :style="flexWrapStyle">
     <div v-if="renderType === 'flex'" class="shadow flex-render-container flex-render-flex" :style="flexContainerStyle" :class="flexContainerActive" @click="editFlexContainer($event)">
@@ -24,7 +25,7 @@
 <script>
 import event from './event.js';
 import Vue from 'vue';
-import {getRender} from '../js/api.js';
+import {getRender, addTestCase} from '../js/api.js';
 
 const backgroundColors = [
   '#fff',
@@ -79,6 +80,17 @@ export default {
     event.$off('changeFlexItemProperties', this.changeFlexItemProperties);
   },
   methods: {
+    addTestCase() {
+      addTestCase(this.flexContainerProperties, this.flexItems).then(() => {
+        this.$message({
+          message: '添加成功',
+          type: 'success'
+        });
+      }).catch(err => {
+        this.$message.error('添加失败');
+        console.error(err);
+      })
+    },
     getRender() {
       getRender(this.flexContainerProperties, this.flexItems).then(data => {
         this.absoluteContainerProperties = {

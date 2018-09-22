@@ -8,3 +8,10 @@ export const getRender = (container, items) => {
     items: JSON.stringify(items)
   });
 };
+
+export const addTestCase = (container, items) => {
+  return sync.POST('/index/collect', {
+    container: JSON.stringify(container),
+    items: JSON.stringify(items)
+  });
+};

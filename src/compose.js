@@ -46,9 +46,10 @@ class Compose {
         lines = lines.reverse();
       }
     }
+
     if(flexDirection === 'row-reverse' || flexDirection === 'column-reverse') {
-      lines = lines.map((item) => {
-        return item.reverse();
+      lines = lines.map((line) => {
+        return line.reverse();
       });
     }
     lines = lines.map((line) => {
