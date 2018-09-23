@@ -99,7 +99,7 @@ class FlexLine {
           } else {
             item[this.crossComputedSize] = caculateSize;
           }
-        } else {
+        } else if(flexWrap === 'wrap-reverse') {
           crossPosition = crossSpace + crossSize - layoutSize;
         }
         break;
