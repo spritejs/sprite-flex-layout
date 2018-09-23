@@ -45,7 +45,7 @@ class Config {
       if(typeof parentValue === 'string') {
         parentValue = this.node.parent[parentValue];
       }
-      value *= parentValue;
+      value = percentValue * parentValue;
     } else if(/^[\d.]+$/.test(value)) {
       value = parseFloat(value, 10);
     } else {

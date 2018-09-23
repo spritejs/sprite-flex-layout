@@ -48,10 +48,10 @@
           </el-select>
         </el-form-item>
         <el-form-item label="width">
-          <el-input v-model="flexContainer.width" type="number" @change="changeProperty('width', $event)"></el-input>
+          <el-input v-model="flexContainer.width" type="text" @change="changeProperty('width', $event)"></el-input>
         </el-form-item>
         <el-form-item label="height">
-          <el-input v-model="flexContainer.height" type="number" @change="changeProperty('height', $event)"></el-input>
+          <el-input v-model="flexContainer.height" type="text" @change="changeProperty('height', $event)"></el-input>
         </el-form-item>
       </div>
       <div v-if="type === 'item'">
@@ -67,34 +67,34 @@
         </el-form-item>
 
         <el-form-item label="flex-grow">
-          <el-input v-model="flexItem.flexGrow" type="number" @change="changeProperty('flexGrow', $event)"></el-input>
+          <el-input v-model="flexItem.flexGrow" type="text" @change="changeProperty('flexGrow', $event)"></el-input>
         </el-form-item>
         <el-form-item label="flex-shrink">
-          <el-input v-model="flexItem.flexShrink" type="number" @change="changeProperty('flexShrink', $event)"></el-input>
+          <el-input v-model="flexItem.flexShrink" type="text" @change="changeProperty('flexShrink', $event)"></el-input>
         </el-form-item>
         <el-form-item label="flex-basis">
           <el-input v-model="flexItem.flexBasis" @change="changeProperty('flexBasis', $event)"></el-input>
         </el-form-item>
         <el-form-item label="width">
-          <el-input v-model="flexItem.width" type="number" @change="changeProperty('width', $event)"></el-input>
+          <el-input v-model="flexItem.width" type="text" @change="changeProperty('width', $event)"></el-input>
         </el-form-item>
         <el-form-item label="min-width">
-          <el-input v-model="flexItem.minWidth" type="number" @change="changeProperty('minWidth', $event)"></el-input>
+          <el-input v-model="flexItem.minWidth" type="text" @change="changeProperty('minWidth', $event)"></el-input>
         </el-form-item>
         <el-form-item label="max-width">
-          <el-input v-model="flexItem.maxWidth" type="number" @change="changeProperty('maxWidth', $event)"></el-input>
+          <el-input v-model="flexItem.maxWidth" type="text" @change="changeProperty('maxWidth', $event)"></el-input>
         </el-form-item>
 
         <el-form-item label="height">
-          <el-input v-model="flexItem.height" type="number" @change="changeProperty('height', $event)"></el-input>
+          <el-input v-model="flexItem.height" type="text" @change="changeProperty('height', $event)"></el-input>
         </el-form-item>
         
         <el-form-item label="min-height">
-          <el-input v-model="flexItem.minHeight" type="number" @change="changeProperty('minHeight', $event)"></el-input>
+          <el-input v-model="flexItem.minHeight" type="text" @change="changeProperty('minHeight', $event)"></el-input>
         </el-form-item>
 
         <el-form-item label="max-height">
-          <el-input v-model="flexItem.maxHeight" type="number" @change="changeProperty('maxHeight', $event)"></el-input>
+          <el-input v-model="flexItem.maxHeight" type="text" @change="changeProperty('maxHeight', $event)"></el-input>
         </el-form-item>
 
         <el-form-item label="box-sizing">
