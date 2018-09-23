@@ -1,6 +1,7 @@
 import {
   getProp,
   parseSpaceBetween,
+  exchangeFlexProp,
 } from './util';
 
 const CROSS_AXIS_SIZE = Symbol('crossAxisSize');
@@ -10,7 +11,6 @@ class FlexLine {
     this.items = items;
     this.container = container;
     this.flexDirection = container.flexDirection;
-    this.alignContent = container.alignContent;
     this.crossPosition = 0;
     this.crossSpace = 0;
     const props = getProp(this.flexDirection);
@@ -47,7 +47,7 @@ class FlexLine {
     const startAuto = item[this.crossMarginStart] === 'auto';
     const endAuto = item[this.crossMarginEnd] === 'auto';
     if(startAuto || endAuto) {
-      if(this.alignContent === 'stretch') {
+      if(this.container.alignContent === 'stretch') {
         crossSize += this.crossSpace;
       }
       const layoutSize = item[this.crossLayoutSize];
@@ -71,26 +71,36 @@ class FlexLine {
     if(alignSelf === 'auto') {
       alignSelf = item.parent.alignItems;
     }
+    const flexWrap = this.container.flexWrap;
+    if(flexWrap === 'wrap-reverse') {
+      alignSelf = exchangeFlexProp(alignSelf);
+    }
     const layoutSize = item[this.crossLayoutSize];
     const itemCrossSize = item[this.crossSize];
+    let crossSpace = this.crossSpace;
+    if(this.container.alignContent !== 'stretch') {
+      crossSpace = 0;
+    }
     let crossPosition = 0;
     switch (alignSelf) {
       case 'flex-end':
-        crossPosition = crossSize - layoutSize;
+        crossPosition = crossSpace + crossSize - layoutSize;
         break;
       case 'center':
-        crossPosition = Math.floor((crossSize - layoutSize) / 2);
+        crossPosition = Math.floor((crossSpace + crossSize - layoutSize) / 2);
         break;
       case 'stretch':
         // stretch item cross size
-        if(this.alignContent === 'stretch' && !itemCrossSize && this.crossSpace) {
+        if(this.container.alignContent === 'stretch' && !itemCrossSize && this.crossSpace) {
           const maxSize = item[this.crossMaxSize] || 0;
-          const caculateSize = this.crossAxisSize + this.crossSpace - item[this.crossLayoutSize];
+          const caculateSize = this.crossAxisSize + this.crossSpace - item[this.crossLayoutSize] + item[this.crossComputedSize];
           if(maxSize) {
             item[this.crossComputedSize] = Math.min(caculateSize, maxSize);
           } else {
             item[this.crossComputedSize] = caculateSize;
           }
+        } else {
+          crossPosition = crossSpace + crossSize - layoutSize;
         }
         break;
       case 'baseline':

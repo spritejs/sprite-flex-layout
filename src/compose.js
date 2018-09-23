@@ -2,6 +2,7 @@ import FlexLine from './flexLine';
 import {
   getProp,
   parseSpaceBetween,
+  exchangeFlexProp,
 } from './util';
 
 class Compose {
@@ -65,8 +66,7 @@ class Compose {
    * parse align-content on multiline flex lines
    */
   parseAlignContent() {
-    const wrap = this.container.flexWrap;
-    const alignContent = this.container.alignContent;
+    let alignContent = this.container.alignContent;
     const crossAxisSize = this.container[this.crossSize];
     let linesCrossAxisSize = 0;
     const lineLength = this.flexLines.length;
@@ -77,12 +77,13 @@ class Compose {
     const space = crossAxisSize - linesCrossAxisSize;
     let linesMarginSize = [];
     if(lineLength === 1) {
+      this.container.alignContent = 'stretch';
       linesMarginSize = [0, space];
     } else {
+      if(this.container.flexWrap === 'wrap-reverse') {
+        alignContent = exchangeFlexProp(alignContent);
+      }
       linesMarginSize = parseSpaceBetween(space, alignContent, lineLength);
-    }
-    if(wrap === 'wrap-reverse') {
-      linesMarginSize = linesMarginSize.reverse();
     }
     let crossPosition = 0;
     this.flexLines.forEach((line, index) => {

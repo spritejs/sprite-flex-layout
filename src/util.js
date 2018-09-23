@@ -207,3 +207,9 @@ export function getProp(flexDirection) {
     crossMarginEnd: 'marginBottom',
   };
 }
+
+export function exchangeFlexProp(prop) {
+  if(prop === 'flex-start') return 'flex-end';
+  if(prop === 'flex-end') return 'flex-start';
+  return prop;
+}
