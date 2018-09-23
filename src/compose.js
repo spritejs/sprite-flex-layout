@@ -11,6 +11,9 @@ class Compose {
     Object.keys(props).forEach((prop) => {
       this[prop] = props[prop];
     });
+    container.children.forEach((item) => {
+      item.config.parse();
+    });
     this.flexLines = this.parseFlexLines(container.children);
   }
 
@@ -21,7 +24,7 @@ class Compose {
   parseFlexLines(items) {
     const wrap = this.container.flexWrap;
     const flexDirection = this.container.flexDirection;
-    const containerPropValue = this.container[this.mainComputedSize];
+    const containerPropValue = this.container[this.mainOffsetSize];
     let lines = [];
     if(wrap === 'nowrap' || !containerPropValue) {
       lines = [items];
@@ -86,9 +89,9 @@ class Compose {
   parseAlignSelf() {
     if(this.flexLines.length === 1) {
       const line = this.flexLines[0];
-      const crossComputedSize = this.container[this.crossComputedSize];
-      line.crossSpace = crossComputedSize - line.crossAxisSize;
-      line.parseAlignSelf(crossComputedSize);
+      const size = this.container[this.crossOffsetSize];
+      line.crossSpace = size - line.crossAxisSize;
+      line.parseAlignSelf(size);
     } else {
       this.flexLines.forEach((line) => {
         line.parseAlignSelf(line.crossAxisSize);
@@ -98,11 +101,11 @@ class Compose {
 
   computeContainerSize() {
     const line = this.flexLines[0];
-    const crossSize = this.container[this.crossComputedSize];
+    const crossSize = this.container[this.crossOffsetSize];
     if(!crossSize) {
       this.container[this.crossSize] = line.crossAxisSize;
     }
-    const mainSize = this.container[this.mainComputedSize];
+    const mainSize = this.container[this.mainOffsetSize];
     if(!mainSize) {
       this.container[this.mainSize] = line.mainAxisSize;
     }

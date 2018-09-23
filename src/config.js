@@ -11,13 +11,6 @@ import {
 } from './util';
 
 
-// const LAYOUT_WIDTH = Symbol('layoutWidth');
-// const LAYOUT_HEIGHT = Symbol('layoutHeight');
-
-const CACLUTE_MARGIN = Symbol('caculate-margin');
-const GET_FLEX_BASIS = Symbol('get-flex-basis');
-const PARSE_PERCENT_VALUE = Symbol('parse-percent-value');
-
 class Config {
   constructor(config = {}, node) {
     this.config = {};
@@ -30,112 +23,164 @@ class Config {
     });
   }
 
-  get border() {
-    return [this.borderTop, this.borderRight, this.borderBottom, this.borderLeft];
+  parse() {
+    this.parseBorder();
+    this.parsePadding();
+    this.parseMargin();
+    this.parseFlex();
+    this.parseFlexFlow();
+    this.parseFlexProps();
+    this.parseSize();
   }
 
-  set border(value) {
-    value = parseCombineValue(value);
-    this.borderTop = value[0];
-    this.borderRight = value[1];
-    this.borderBottom = value[2];
-    this.borderLeft = value[3];
+  parseNumberValue(value, parentValue) {
+    if(value === 'auto' || typeof value === 'number') return value;
+    if(!value) return 0;
+    const percentValue = parsePercentValue(value);
+    if(typeof percentValue === 'number') {
+      if(typeof parentValue === 'string') {
+        parentValue = this.node.parent[parentValue];
+      }
+      value *= parentValue;
+    } else if(/^[\d.]+$/.test(value)) {
+      value = parseFloat(value, 10);
+    } else {
+      throw new Error(`${value} is not a number`);
+    }
+    return value;
   }
 
-  get padding() {
-    return [this.paddingTop, this.paddingRight, this.paddingBottom, this.paddingLeft];
+  parseBorder() {
+    let border = this.border || [0, 0, 0, 0];
+    if(border) {
+      border = parseCombineValue(border).map((item) => {
+        return this.parseNumberValue(item);
+      });
+    }
+    const borderList = ['borderTop', 'borderRight', 'borderBottom', 'borderLeft'];
+    this.border = borderList.map((item, index) => {
+      this[item] = this.parseNumberValue(this[item]) || border[index];
+      return this[item];
+    });
   }
 
-  set padding(value) {
-    value = parseCombineValue(value);
-    this.paddingTop = value[0];
-    this.paddingRight = value[1];
-    this.paddingBottom = value[2];
-    this.paddingLeft = value[3];
+  parsePadding() {
+    let padding = this.padding || [0, 0, 0, 0];
+    if(padding) {
+      padding = parseCombineValue(padding).map((item) => {
+        return this.parseNumberValue(item, 'width');
+      });
+    }
+    const paddingList = ['paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft'];
+    this.padding = paddingList.map((item, index) => {
+      this[item] = this.parseNumberValue(this[item], 'width') || padding[index];
+      return this[item];
+    });
   }
 
-  get margin() {
-    return [this.marginTop, this.marginRight, this.marginBottom, this.marginLeft];
+  parseMargin() {
+    let margin = this.margin || [0, 0, 0, 0];
+    if(margin) {
+      margin = parseCombineValue(margin).map((item) => {
+        return this.parseNumberValue(item, 'width');
+      });
+    }
+    const marginList = ['marginTop', 'marginRight', 'marginBottom', 'marginLeft'];
+    this.margin = marginList.map((item, index) => {
+      this[item] = this.parseNumberValue(this[item], 'width') || margin[index];
+      return this[item];
+    });
   }
 
-  set margin(value) {
-    value = parseCombineValue(value);
-    this.marginTop = value[0];
-    this.marginRight = value[1];
-    this.marginBottom = value[2];
-    this.marginLeft = value[3];
-  }
-
-
-  get flex() {
-    return this.config.flex;
-  }
-
-  set flex(value) {
-    this.config.flex = value;
-    if(value === 'none') return;
-    if(typeof value === 'number') {
-      this.flexGrow = value;
-      this.flexShrink = 1;
-      this.flexBaxis = '0%';
+  parseFlex() {
+    const flex = this.flex;
+    if(typeof flex === 'number') {
+      this.flexGrow = this.flexGrow || flex;
+    }
+    this.flexShrink = this.flexShrink || 1;
+    this.flexGrow = this.flexGrow || 0;
+    let flexBaxis = this.flexBaxis;
+    if(flexBaxis) {
+      const flexDirection = this.node.parent.flexDirection;
+      const isRow = flexDirection === 'row' || flexDirection === 'row-reverse';
+      flexBaxis = this.parseNumberValue(flexBaxis, isRow ? 'width' : 'height');
+      this.flexBaxis = flexBaxis;
     }
   }
 
-  get flexBaxis() {
-    return this.config.flexBaxis;
-  }
-
-  get flexShrink() {
-    return this.config.flexShrink || 1;
-  }
-
-  set flexShrink(value) {
-    this.config.flexShrink = value;
-  }
-
-  set flexBaxis(value) {
-    const flexDirection = this.node.parent.flexDirection;
-    const isRow = flexDirection === 'row' || flexDirection === 'row-reverse';
-    value = this[PARSE_PERCENT_VALUE](value, isRow ? 'width' : 'height');
-    this.config.flexBaxis = value;
-  }
-
-  [PARSE_PERCENT_VALUE](value, parentProp = 'width') {
-    if(typeof value === 'number' || value === 'auto' || !value) return value || 0;
-    const percent = parsePercentValue(value);
-    if(percent) {
-      let parentValue = parentProp;
-      if(typeof parentProp === 'string') {
-        parentValue = this.node.parent[parentProp];
-      }
-      if(!parentValue) {
-        throw new Error(`parent node width & height must be set when child value is percent(${value})`);
-      }
-      return parentValue * percent;
+  parseSize() {
+    const widths = ['width', 'minWidth', 'maxWidth'];
+    widths.forEach((item) => {
+      this[item] = this.parseNumberValue(this[item], 'width') || 0;
+    });
+    if(this.width && !this.offsetWidth) {
+      this.offsetWidth = this.width;
     }
-    throw new Error(`value:${value} must be a number`);
+    const heights = ['height', 'minHeight', 'maxHeight'];
+    heights.forEach((item) => {
+      this[item] = this.parseNumberValue(this[item], 'height') || 0;
+    });
+    if(this.height && !this.offsetHeight) {
+      this.offsetHeight = this.height;
+    }
   }
 
-  [CACLUTE_MARGIN](prop, parentValue) {
+  parseFlexFlow() {
+    const flexFlow = this.flexFlow;
+    if(flexFlow) {
+      flexFlow.split(/\s+/).forEach((item) => {
+        if(flexDirectionValues.includes(item)) {
+          this.flexDirection = item;
+        } else if(flexWrapValues.includes(item)) {
+          this.flexWrap = item;
+        } else {
+          throw new Error(`FlexFlow: ${flexFlow} is not valid`);
+        }
+      });
+    }
+  }
+
+  parseFlexProps() {
+    const props = {
+      flexDirection: flexDirectionValues,
+      flexWrap: flexWrapValues,
+      justifyContent: justifyContentValues,
+      alignItems: alignItemsValues,
+      alignSelf: alignSelfValues,
+      alignContent: alignContentValues,
+    };
+    Object.keys(props).forEach((item) => {
+      if(this[item]) {
+        const allowValues = props[item];
+        if(allowValues.indexOf(this[item]) === -1) {
+          throw new Error(`${item} value:${this[item]} is not valid`);
+        }
+      } else {
+        this[item] = props[item][0];
+      }
+    });
+  }
+
+  cacluateMargin(prop) {
     const value = this[prop];
     if(value === 'auto') return 0;
     return value;
   }
 
-  [GET_FLEX_BASIS](type = 'width') {
+  getFlexBasis(type = 'width') {
     const flexDirection = this.node.parent.flexDirection;
     const flexBaxis = this.flexBaxis;
     if(flexBaxis && flexBaxis !== 'auto') {
       const isRow = flexDirection === 'row' || flexDirection === 'row-reverse';
       if(type === 'width' && isRow || type === 'height' && !isRow) {
-        const value = this[PARSE_PERCENT_VALUE](flexBaxis, isRow ? 'width' : 'height');
+        const value = this.parseNumberValue(flexBaxis, isRow ? 'width' : 'height');
         return value;
       }
     }
   }
 
-  get contentBoxWidth() {
-    let width = this[GET_FLEX_BASIS]('width') || this.computedWidth || 0;
+  get computedWidth() {
+    let width = this.getFlexBasis('width') || this.offsetWidth || 0;
     const minWidth = this.minWidth;
     const maxWidth = this.maxWidth;
     if(minWidth && width < minWidth) {
@@ -144,34 +189,26 @@ class Config {
     if(maxWidth && width > maxWidth) {
       width = maxWidth;
     }
-    // seto computedWidth?
-    if(width && width !== this.computedWidth) {
-      this.computedWidth = width;
-    }
     return width;
   }
 
   get layoutWidth() {
-    // if(this[LAYOUT_WIDTH]) return this[LAYOUT_WIDTH];
-    const width = this.contentBoxWidth;
+    let width = this.computedWidth;
 
-    const props = [];
+    const marginLeft = this.cacluateMargin('marginLeft');
+    const marginRight = this.cacluateMargin('marginRight');
+    width += marginLeft + marginRight;
     if(this.boxSizing !== 'border-box') {
-      props.push('borderLeft', 'borderRight', 'paddingLeft', 'paddingRight');
+      const props = ['borderLeft', 'borderRight', 'paddingLeft', 'paddingRight'];
+      props.forEach((item) => {
+        width += this[item] || 0;
+      });
     }
-    const parentWidth = this.node.parent.computedWidth;
-    const marginLeft = this[CACLUTE_MARGIN]('marginLeft', parentWidth);
-    const marginRight = this[CACLUTE_MARGIN]('marginRight', parentWidth);
-    let value = marginLeft + marginRight;
-    props.forEach((item) => {
-      value += this[item] || 0;
-    });
-    // this[LAYOUT_WIDTH] = width + value;
-    return width + value;
+    return width;
   }
 
-  get contentBoxHeight() {
-    let height = this[GET_FLEX_BASIS]('height') || this.computedHeight || 0;
+  get computedHeight() {
+    let height = this.getFlexBasis('height') || this.offsetHeight || 0;
     const minHeight = this.minHeight || 0;
     const maxHeight = this.maxHeight || 0;
     if(minHeight && height < minHeight) {
@@ -180,120 +217,23 @@ class Config {
     if(maxHeight && height > maxHeight) {
       height = maxHeight;
     }
-    // set to computedHeight?
-    if(height && height !== this.computedHeight) {
-      this.computedHeight = height;
-    }
     return height;
   }
 
   get layoutHeight() {
-    // if(this[LAYOUT_HEIGHT]) return this[LAYOUT_HEIGHT];
-    const height = this.contentBoxHeight;
+    let height = this.computedHeight;
 
-    const props = [];
+    const marginTop = this.cacluateMargin('marginTop');
+    const marginBottom = this.cacluateMargin('marginBottom');
+    height += marginTop + marginBottom;
     if(this.boxSizing !== 'border-box') {
-      props.push('borderTop', 'borderBottom', 'paddingTop', 'paddingBottom');
+      const props = ['borderTop', 'borderBottom', 'paddingTop', 'paddingBottom'];
+      props.forEach((item) => {
+        height += this[item] || 0;
+      });
     }
-    const parentHeight = this.node.parent.computedHeight;
-    const marginTop = this[CACLUTE_MARGIN]('marginTop', parentHeight);
-    const marginBottom = this[CACLUTE_MARGIN]('marginBottom', parentHeight);
-    let value = marginTop + marginBottom;
-    props.forEach((item) => {
-      value += this[item] || 0;
-    });
-    // this[LAYOUT_HEIGHT] = height + value;
-    return height + value;
-  }
-
-  get flexFlow() {
-    return this.config.flexFlow;
-  }
-
-  set flexFlow(value) {
-    value.split(/\s+/).forEach((item) => {
-      if(!item) return;
-      if(flexDirectionValues.includes(item)) {
-        this.flexDirection = item;
-      } else if(flexWrapValues.includes(item)) {
-        this.flexWrap = item;
-      } else {
-        throw new Error(`FlexFlow: ${value} is not valid`);
-      }
-    });
-    this.config.flexFlow = value;
-  }
-
-  get width() {
-    return this.config.width;
-  }
-
-  set width(value) {
-    value = this[PARSE_PERCENT_VALUE](value, 'width');
-    this.computedWidth = value;
-    this.config.width = value;
-  }
-
-  get height() {
-    return this.config.height;
-  }
-
-  set height(value) {
-    value = this[PARSE_PERCENT_VALUE](value, 'height');
-    this.computedHeight = value;
-    this.config.height = value;
+    return height;
   }
 }
-
-const properties = {
-  flexDirection: flexDirectionValues,
-  flexWrap: flexWrapValues,
-  justifyContent: justifyContentValues,
-  alignItems: alignItemsValues,
-  alignSelf: alignSelfValues,
-  alignContent: alignContentValues,
-};
-
-Object.keys(properties).forEach((property) => {
-  Object.defineProperty(Config.prototype, property, {
-    get() {
-      return this.config[property] || properties[property][0];
-    },
-    set(value) {
-      const allowValues = properties[property];
-      if(!allowValues.includes(value)) {
-        throw new Error(`${property}:${value} is not valid`);
-      }
-      this.config[property] = value;
-    },
-    enumerable: true,
-    configurable: true,
-  });
-});
-
-
-const supportPercentProps = {
-  width: ['minWidth', 'maxWidth', 'marginLeft', 'marginRight', 'paddingLeft', 'paddingRight'],
-  height: ['minHeight', 'maxHeight', 'marginTop', 'marginBottom', 'paddingTop', 'paddingBottom'],
-};
-Object.keys(supportPercentProps).forEach((prop) => {
-  supportPercentProps[prop].forEach((item) => {
-    Object.defineProperty(Config.prototype, item, {
-      get() {
-        const value = this[PARSE_PERCENT_VALUE](this.config[item], prop);
-        if(value) {
-          this[item] = value;
-        }
-        return value;
-      },
-      set(value) {
-        this.config[item] = value;
-      },
-      enumerable: true,
-      configurable: true,
-    });
-  });
-});
-
 
 export default Config;
