@@ -101,8 +101,8 @@ class Config {
     if(typeof flex === 'number') {
       this.flexGrow = this.flexGrow || flex;
     }
-    this.flexShrink = this.flexShrink || 1;
-    this.flexGrow = this.flexGrow || 0;
+    this.flexShrink = parseInt(this.flexShrink, 10) || 1;
+    this.flexGrow = parseInt(this.flexGrow, 10) || 0;
     let flexBaxis = this.flexBaxis;
     if(flexBaxis) {
       const flexDirection = this.node.parent.flexDirection;

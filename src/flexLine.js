@@ -162,7 +162,7 @@ class FlexLine {
         if(item.max && item.grow) {
           const leaveSpace = item.max - this.items[index][this.mainComputedSize];
           if(itemSpace * item.grow > leaveSpace) {
-            this.items[index][this.mainSize] = item.max;
+            this.items[index][this.mainComputedSize] = item.max;
             space -= leaveSpace;
             grow -= item.grow;
             delete item.max;
@@ -244,8 +244,9 @@ class FlexLine {
     let min = 0;
     const items = [];
     this.items.forEach((item) => {
-      shrink += item.flexShrink;
-      items.push({min: item[this.mainMinSize], shrink: item.flexShrink});
+      const shrinkItem = item.flexShrink * item[this.mainComputedSize];
+      shrink += shrinkItem;
+      items.push({min: item[this.mainMinSize], shrink: shrinkItem});
       if(item[this.mainMinSize]) min++;
     });
     while(true) {
@@ -254,8 +255,14 @@ class FlexLine {
         items.forEach((item, index) => {
           if(item.shrink) {
             const decreSpace = item.shrink * itemSpace;
-            this.items[index][this.mainSize] -= decreSpace;
-            space += decreSpace;
+            const size = this.items[index][this.mainComputedSize] - decreSpace;
+            if(size > 0) {
+              this.items[index][this.mainComputedSize] -= decreSpace;
+              space += decreSpace;
+            } else {
+              this.items[index][this.mainComputedSize] = 1;
+              space += decreSpace + size;
+            }
           }
         });
         break;
@@ -265,7 +272,7 @@ class FlexLine {
         if(item.min) {
           const leaveSpace = this.items[index][this.mainComputedSize] - item.min;
           if(itemSpace * item.shrink > leaveSpace) {
-            this.items[index][this.mainSize] = item.min;
+            this.items[index][this.mainComputedSize] = item.min;
             space += leaveSpace;
             shrink -= item.shrink;
             delete item.min;

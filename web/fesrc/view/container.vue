@@ -142,7 +142,7 @@ export default {
           if(newItem.startsWith('border-')) {
             newItem += '-width';
           }
-          ret[newItem] = /^[\d\.]+$/.test(props[item]) ? props[item] + 'px' : props[item];
+          ret[newItem] = /^[\d\.\-]+$/.test(props[item]) ? props[item] + 'px' : props[item];
         } else {
           ret[newItem] = props[item];
         }
