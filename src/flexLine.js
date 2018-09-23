@@ -85,7 +85,12 @@ class FlexLine {
         // stretch item cross size
         if(this.alignContent === 'stretch' && !itemCrossSize && this.crossSpace) {
           const maxSize = item[this.crossMaxSize] || 0;
-          item[this.crossSize] = Math.max(this.crossAxisSize + this.crossSpace, maxSize);
+          const caculateSize = this.crossAxisSize + this.crossSpace - item[this.crossLayoutSize];
+          if(maxSize) {
+            item[this.crossComputedSize] = Math.min(caculateSize, maxSize);
+          } else {
+            item[this.crossComputedSize] = caculateSize;
+          }
         }
         break;
       case 'baseline':
