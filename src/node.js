@@ -33,7 +33,9 @@ class Node {
   }
 
   getComputedLayout() {
-    const layout = new Layout(this.left, this.top, this.width, this.height);
+    const width = this.computedWidth || this.width;
+    const height = this.computedHeight || this.height;
+    const layout = new Layout(this.left, this.top, width, height);
     return layout;
   }
 

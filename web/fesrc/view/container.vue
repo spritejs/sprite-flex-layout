@@ -130,7 +130,7 @@ export default {
         'padding-top', 'padding-right', 'padding-bottom', 'padding-left',
         'margin-top', 'margin-right', 'margin-bottom', 'margin-left',
         'border-top', 'border-right', 'border-bottom', 'border-left',
-        'top', 'left'
+        'top', 'left', 'flex-basis'
       ];
 
       Object.keys(props).forEach((item) => {

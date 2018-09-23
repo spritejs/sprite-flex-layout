@@ -132,7 +132,7 @@ class FlexLine {
         items.forEach((item, index) => {
           if(item.grow) {
             const increSpace = Math.round(item.grow * itemSpace);
-            this.items[index][this.mainSize] = this.items[index][this.mainComputedSize] + increSpace;
+            this.items[index][this.mainComputedSize] += increSpace;
             space -= increSpace;
             flag = true;
           }
@@ -239,7 +239,7 @@ class FlexLine {
         items.forEach((item, index) => {
           if(item.shrink) {
             const decreSpace = item.shrink * itemSpace;
-            this.items[index][this.mainSize] = this.items[index][this.mainComputedSize] - decreSpace;
+            this.items[index][this.mainSize] -= decreSpace;
             space += decreSpace;
           }
         });

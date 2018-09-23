@@ -31,6 +31,10 @@ class Config {
     this.parseFlexFlow();
     this.parseFlexProps();
     this.parseSize();
+    this.parseComputedWidth();
+    this.parseComputedHeight();
+    this.parseLayoutWidth();
+    this.parseLayoutHeight();
   }
 
   parseNumberValue(value, parentValue) {
@@ -179,20 +183,23 @@ class Config {
     }
   }
 
-  get computedWidth() {
+  parseComputedWidth() {
     let width = this.getFlexBasis('width') || this.offsetWidth || 0;
     const minWidth = this.minWidth;
-    const maxWidth = this.maxWidth;
+    let maxWidth = this.maxWidth;
+    if(maxWidth && minWidth && maxWidth < minWidth) {
+      maxWidth = minWidth;
+    }
     if(minWidth && width < minWidth) {
       width = minWidth;
     }
     if(maxWidth && width > maxWidth) {
       width = maxWidth;
     }
-    return width;
+    this.computedWidth = width;
   }
 
-  get layoutWidth() {
+  parseLayoutWidth() {
     let width = this.computedWidth;
 
     const marginLeft = this.cacluateMargin('marginLeft');
@@ -204,23 +211,26 @@ class Config {
         width += this[item] || 0;
       });
     }
-    return width;
+    this.layoutWidth = width;
   }
 
-  get computedHeight() {
+  parseComputedHeight() {
     let height = this.getFlexBasis('height') || this.offsetHeight || 0;
-    const minHeight = this.minHeight || 0;
-    const maxHeight = this.maxHeight || 0;
+    const minHeight = this.minHeight;
+    let maxHeight = this.maxHeight;
+    if(maxHeight && minHeight && maxHeight < minHeight) {
+      maxHeight = minHeight;
+    }
     if(minHeight && height < minHeight) {
       height = minHeight;
     }
     if(maxHeight && height > maxHeight) {
       height = maxHeight;
     }
-    return height;
+    this.computedHeight = height;
   }
 
-  get layoutHeight() {
+  parseLayoutHeight() {
     let height = this.computedHeight;
 
     const marginTop = this.cacluateMargin('marginTop');
@@ -232,7 +242,7 @@ class Config {
         height += this[item] || 0;
       });
     }
-    return height;
+    this.layoutHeight = height;
   }
 }
 
