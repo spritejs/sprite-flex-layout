@@ -24,7 +24,7 @@ class Compose {
   parseFlexLines(items) {
     const wrap = this.container.flexWrap;
     const flexDirection = this.container.flexDirection;
-    const containerPropValue = this.container[this.mainOffsetSize];
+    const containerPropValue = this.container[this.mainSize];
     let lines = [];
     if(wrap === 'nowrap' || !containerPropValue) {
       lines = [items];
@@ -89,7 +89,7 @@ class Compose {
   parseAlignSelf() {
     if(this.flexLines.length === 1) {
       const line = this.flexLines[0];
-      const size = this.container[this.crossOffsetSize];
+      const size = this.container[this.crossSize];
       line.crossSpace = size - line.crossAxisSize;
       line.parseAlignSelf(size);
     } else {
@@ -101,12 +101,10 @@ class Compose {
 
   computeContainerSize() {
     const line = this.flexLines[0];
-    const crossSize = this.container[this.crossOffsetSize];
-    if(!crossSize) {
+    if(!this.container[this.crossSize]) {
       this.container[this.crossSize] = line.crossAxisSize;
     }
-    const mainSize = this.container[this.mainOffsetSize];
-    if(!mainSize) {
+    if(!this.container[this.mainSize]) {
       this.container[this.mainSize] = line.mainAxisSize;
     }
   }
