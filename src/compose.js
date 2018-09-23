@@ -65,10 +65,9 @@ class Compose {
    * parse align-content on multiline flex lines
    */
   parseAlignContent() {
-    if(this.flexLines.length === 1) return;
+    const wrap = this.container.flexWrap;
     const alignContent = this.container.alignContent;
-    const sizeProp = this.crossComputedSize;
-    const crossAxisSize = this.container[sizeProp];
+    const crossAxisSize = this.container[this.crossSize];
     let linesCrossAxisSize = 0;
     const lineLength = this.flexLines.length;
     this.flexLines.forEach((line) => {
@@ -76,7 +75,15 @@ class Compose {
     });
     // margin between lines
     const space = crossAxisSize - linesCrossAxisSize;
-    const linesMarginSize = parseSpaceBetween(space, alignContent, lineLength);
+    let linesMarginSize = [];
+    if(lineLength === 1) {
+      linesMarginSize = [0, space];
+    } else {
+      linesMarginSize = parseSpaceBetween(space, alignContent, lineLength);
+    }
+    if(wrap === 'wrap-reverse') {
+      linesMarginSize = linesMarginSize.reverse();
+    }
     let crossPosition = 0;
     this.flexLines.forEach((line, index) => {
       crossPosition += linesMarginSize[index] || 0;
@@ -87,16 +94,9 @@ class Compose {
   }
 
   parseAlignSelf() {
-    if(this.flexLines.length === 1) {
-      const line = this.flexLines[0];
-      const size = this.container[this.crossSize];
-      line.crossSpace = size - line.crossAxisSize;
-      line.parseAlignSelf(size);
-    } else {
-      this.flexLines.forEach((line) => {
-        line.parseAlignSelf(line.crossAxisSize);
-      });
-    }
+    this.flexLines.forEach((line) => {
+      line.parseAlignSelf(line.crossAxisSize);
+    });
   }
 
   computeContainerSize() {

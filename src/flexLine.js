@@ -95,7 +95,7 @@ class FlexLine {
         break;
       case 'baseline':
         throw new Error('align-self:baseline is not support');
-      default:
+      default: // default is flex-start
         break;
     }
     const pos = this.crossPosition + crossPosition;
