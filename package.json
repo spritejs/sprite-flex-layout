@@ -1,14 +1,17 @@
 {
   "name": "sprite-flex-layout",
   "version": "1.0.1",
-  "description": "",
-  "main": "index.js",
+  "description": "flex layout",
+  "main": "./lib/index.js",
   "scripts": {
     "lint": "eslint 'src/**/*.js' --fix",
     "compile": "rm -rf lib/* && babel src -d lib --watch",
     "test": "nyc ava test/index.js && nyc report --reporter=html"
   },
-  "author": "",
+  "esnext": {
+    "./lib/index.js": "./src/index.js"
+  },
+  "author": "welefen",
   "license": "MIT",
   "devDependencies": {
     "ava": "^0.25.0",
