@@ -104,6 +104,10 @@
           </el-select>
         </el-form-item>
 
+        <el-form-item label="order">
+          <el-input v-model="flexItem.order" type="text" @change="changeProperty('order', $event)"></el-input>
+        </el-form-item>
+
         <div style="padding: 20px 10px;">
           <div style="width:80px;margin:auto">
             <el-input v-model="flexItem.borderTop" type="text" @change="changeProperty('borderTop', $event)"></el-input>
@@ -192,7 +196,8 @@ const flexItem = {
   paddingRight: '',
   paddingBottom: '',
   paddingLeft: '',
-  boxSizing: 'content-box'
+  boxSizing: 'content-box',
+  order: '',
 };
 export default {
   data() {

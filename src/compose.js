@@ -15,7 +15,19 @@ class Compose {
     container.children.forEach((item) => {
       item.config.parse();
     });
+    container.children = this.parseOrder(container.children);
     this.flexLines = this.parseFlexLines(container.children);
+  }
+
+  parseOrder(items) {
+    return items.sort((a, b) => {
+      const ar = a.order | 0;
+      const br = b.order | 0;
+      if(a.order && b.order) return ar > br ? 1 : -1;
+      if(a.order) return ar > 0 ? 1 : -1;
+      if(b.order) return br > 0 ? -1 : 1;
+      return a.id > b.id ? 1 : -1;
+    });
   }
 
   /**

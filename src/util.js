@@ -38,6 +38,7 @@ export const flexProperties = [
   'offsetHeight',
   'computedWidth',
   'computedHeight',
+  'order',
 ];
 
 export const flexDirectionValues = [
