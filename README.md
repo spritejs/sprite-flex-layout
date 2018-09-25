@@ -35,13 +35,20 @@ console.log(layout);
 
 ## support properties
 
-* `flex` 
+### flex container
+
 * `flexDirection` 
 * `flexWrap` 
 * `flexFlow` 
-* `justifyContent` 
-* `alignContent` 
 * `alignItems` 
+* `alignContent` 
+* `height` 
+* `width` 
+
+### flex items
+
+* `flex` 
+* `justifyContent` 
 * `alignSelf` 
 * `flexShrink` 
 * `flexBasis` 
@@ -67,7 +74,7 @@ console.log(layout);
 * `paddingRight` 
 * `paddingBottom` 
 * `paddingLeft` 
-* `boxSizing`  `content-box` | `border-box`, default is `content-box`
+* `boxSizing` 
 * `offsetWidth` 
 * `offsetHeight` 
 * `order`
