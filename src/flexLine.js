@@ -5,8 +5,6 @@ import {
   parseMarginAuto,
 } from './util';
 
-const CROSS_AXIS_SIZE = Symbol('crossAxisSize');
-
 class FlexLine {
   constructor(items, container) {
     this.items = items;
@@ -35,13 +33,10 @@ class FlexLine {
    * get cross axis size based on flex direction
    */
   get crossAxisSize() {
-    if(this[CROSS_AXIS_SIZE]) return this[CROSS_AXIS_SIZE];
     const values = this.items.map((item) => {
       return item[this.crossLayoutSize] || 0;
     });
-    const result = Math.max(...values);
-    this[CROSS_AXIS_SIZE] = result;
-    return result;
+    return Math.max(...values);
   }
 
   parseAutoCrossMargin(item, crossSize) {
