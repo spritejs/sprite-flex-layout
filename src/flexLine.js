@@ -2,6 +2,7 @@ import {
   getProp,
   parseSpaceBetween,
   exchangeFlexProp,
+  parseMarginAuto,
 } from './util';
 
 const CROSS_AXIS_SIZE = Symbol('crossAxisSize');
@@ -56,6 +57,8 @@ class FlexLine {
         size = (crossSize - layoutSize) / 2;
       } else if(startAuto) {
         size = crossSize - layoutSize;
+      } else {
+        size = item[this.crossMarginStart];
       }
       item[this.crossPos] = this.crossPosition + size;
       return true;
@@ -204,10 +207,10 @@ class FlexLine {
     const itemSpace = space / marginAutoNum;
     let pos = 0;
     this.items.forEach((item) => {
-      pos += this._getMarginValue(item[this.mainMarginStart], itemSpace);
+      pos += parseMarginAuto(item[this.mainMarginStart], itemSpace);
       item[this.mainPos] = pos;
-      pos += item[this.mainLayoutSize];
-      pos += this._getMarginValue(item[this.mainMarginEnd], itemSpace);
+      pos += item[this.mainLayoutSize] - parseMarginAuto(item[this.mainMarginStart]);
+      pos += parseMarginAuto(item[this.mainMarginEnd], itemSpace) - parseMarginAuto(item[this.mainMarginEnd]);
     });
   }
 
@@ -215,11 +218,7 @@ class FlexLine {
     let justifyContent = this.container.justifyContent;
     const flexDirection = this.container.flexDirection;
     if(flexDirection === 'row-reverse' || flexDirection === 'column-reverse') {
-      if(justifyContent === 'flex-start') {
-        justifyContent = 'flex-end';
-      } else if(justifyContent === 'flex-end') {
-        justifyContent = 'flex-start';
-      }
+      justifyContent = exchangeFlexProp(justifyContent);
     }
     return justifyContent;
   }
@@ -234,7 +233,7 @@ class FlexLine {
     let pos = 0;
     this.items.forEach((item, index) => {
       pos += marginSizes[index] || 0;
-      item[this.mainPos] = pos;
+      item[this.mainPos] = pos + item[this.mainMarginStart];
       pos += item[this.mainLayoutSize];
     });
   }
@@ -295,12 +294,11 @@ class FlexLine {
       let pos = 0;
       this.items.forEach((item) => {
         item[this.mainPos] = pos;
-        pos += item[this.mainComputedSize];
+        pos += item[this.mainLayoutSize];
       });
       return;
     }
-    const mainAxisSize = this.mainAxisSize;
-    let space = mainSize - mainAxisSize;
+    let space = mainSize - this.mainAxisSize;
     if(space > 0) {
       if(this.hasFlexGrow()) {
         space = this.parseByFlexGrow(space);

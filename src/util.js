@@ -213,3 +213,8 @@ export function exchangeFlexProp(prop) {
   if(prop === 'flex-end') return 'flex-start';
   return prop;
 }
+
+export function parseMarginAuto(value, autoValue = 0) {
+  if(value === 'auto') return autoValue;
+  return value || 0;
+}

@@ -6,7 +6,7 @@
     <el-button type="success" @click="addTestCase">添加到测试用例</el-button>
 
 
-    <el-dropdown @command="openFailItem">
+    <el-dropdown @command="openFailItem" style="margin-left:10px;">
       <el-badge :value="failNums" class="item">
         <el-button type="primary">
           单元测试（{{successNums}}）<i class="el-icon-arrow-down el-icon--right"></i>

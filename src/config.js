@@ -8,6 +8,7 @@ import {
   alignContentValues,
   parseCombineValue,
   parsePercentValue,
+  parseMarginAuto,
 } from './util';
 
 
@@ -211,8 +212,8 @@ class Config {
   parseLayoutWidth() {
     let width = this.computedWidth;
 
-    const marginLeft = this.cacluateMargin('marginLeft');
-    const marginRight = this.cacluateMargin('marginRight');
+    const marginLeft = parseMarginAuto(this.marginLeft);
+    const marginRight = parseMarginAuto(this.marginRight);
     width += marginLeft + marginRight;
     if(this.boxSizing !== 'border-box') {
       const props = ['borderLeft', 'borderRight', 'paddingLeft', 'paddingRight'];
@@ -251,8 +252,8 @@ class Config {
   parseLayoutHeight() {
     let height = this.computedHeight;
 
-    const marginTop = this.cacluateMargin('marginTop');
-    const marginBottom = this.cacluateMargin('marginBottom');
+    const marginTop = parseMarginAuto(this.marginTop);
+    const marginBottom = parseMarginAuto(this.marginBottom);
     height += marginTop + marginBottom;
     if(this.boxSizing !== 'border-box') {
       const props = ['borderTop', 'borderBottom', 'paddingTop', 'paddingBottom'];
