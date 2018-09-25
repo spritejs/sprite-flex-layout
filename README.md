@@ -32,3 +32,46 @@ container.calculateLayout();
 const layout = container.getAllComputedLayout();
 console.log(layout);
 ```
+
+## support properties
+
+* `flex` 
+* `flexDirection` 
+* `flexWrap` 
+* `flexFlow` 
+* `justifyContent` 
+* `alignContent` 
+* `alignItems` 
+* `alignSelf` 
+* `flexShrink` 
+* `flexBasis` 
+* `flexGrow` 
+* `maxHeight` 
+* `maxWidth` 
+* `minHeight` 
+* `minWidth` 
+* `border` 
+* `borderTop` 
+* `borderRight` 
+* `borderBottom` 
+* `borderLeft` 
+* `height` 
+* `width` 
+* `margin` 
+* `marginTop` 
+* `marginRight` 
+* `marginBottom` 
+* `marginLeft` 
+* `padding` 
+* `paddingTop` 
+* `paddingRight` 
+* `paddingBottom` 
+* `paddingLeft` 
+* `boxSizing` 
+* `layoutWidth` 
+* `layoutHeight` 
+* `offsetWidth` 
+* `offsetHeight` 
+* `computedWidth` 
+* `computedHeight` 
+* `order`
