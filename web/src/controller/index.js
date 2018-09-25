@@ -66,7 +66,10 @@ module.exports = class extends Base {
       items,
       result: layout
     };
-    const key = think.md5(JSON.stringify(data));
+    const key = think.md5(JSON.stringify({
+      container: data.container,
+      items: data.items
+    }));
     fs.writeFileSync(path.join(casePath, `${key}.json`), JSON.stringify(data, undefined, 2));
     return this.success();
   }
