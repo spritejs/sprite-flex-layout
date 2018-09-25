@@ -5,7 +5,7 @@ FlexLayout for SpriteJS
 
 ```
 npm install sprite-flex-layout
-``
+```
 
 ## How to use
 
