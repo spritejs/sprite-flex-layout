@@ -183,6 +183,15 @@ class Config {
     }
   }
 
+  get computedWidth() {
+    return this.config.computedWidth;
+  }
+
+  set computedWidth(value) {
+    this.config.computedWidth = value;
+    this.parseLayoutWidth();
+  }
+
   parseComputedWidth() {
     let width = this.getFlexBasis('width') || this.offsetWidth || 0;
     const minWidth = this.minWidth;
@@ -196,7 +205,7 @@ class Config {
     if(maxWidth && width > maxWidth) {
       width = maxWidth;
     }
-    this.computedWidth = width;
+    this.config.computedWidth = width;
   }
 
   parseLayoutWidth() {
@@ -214,6 +223,15 @@ class Config {
     this.layoutWidth = width;
   }
 
+  get computedHeight() {
+    return this.config.computedHeight;
+  }
+
+  set computedHeight(value) {
+    this.config.computedHeight = value;
+    this.parseLayoutHeight();
+  }
+
   parseComputedHeight() {
     let height = this.getFlexBasis('height') || this.offsetHeight || 0;
     const minHeight = this.minHeight;
@@ -227,7 +245,7 @@ class Config {
     if(maxHeight && height > maxHeight) {
       height = maxHeight;
     }
-    this.computedHeight = height;
+    this.config.computedHeight = height;
   }
 
   parseLayoutHeight() {
