@@ -47,7 +47,7 @@ class Config {
         parentValue = this.node.parent[parentValue];
       }
       value = percentValue * parentValue;
-    } else if(/^[\d.]+$/.test(value)) {
+    } else if(/^[\d.-]+$/.test(value)) {
       value = parseFloat(value, 10);
     } else {
       throw new Error(`${value} is not a number`);
@@ -65,6 +65,9 @@ class Config {
     const borderList = ['borderTop', 'borderRight', 'borderBottom', 'borderLeft'];
     this.border = borderList.map((item, index) => {
       this[item] = this.parseNumberValue(this[item]) || border[index];
+      if(this[item] < 0) {
+        throw new Error(`${item}:${this[item]} is not valid`);
+      }
       return this[item];
     });
   }
@@ -79,6 +82,9 @@ class Config {
     const paddingList = ['paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft'];
     this.padding = paddingList.map((item, index) => {
       this[item] = this.parseNumberValue(this[item], 'width') || padding[index];
+      if(this[item] < 0) {
+        throw new Error(`${item}:${this[item]} is not valid`);
+      }
       return this[item];
     });
   }
@@ -99,17 +105,29 @@ class Config {
 
   parseFlex() {
     const flex = this.flex;
-    if(typeof flex === 'number') {
-      this.flexGrow = this.flexGrow || flex;
+    if(flex) {
+      if(typeof flex === 'number') {
+        this.flexGrow = this.flexGrow || flex;
+      }
+      const [flexFlow, flexShrink, flexBasis] = flex.split(/\s+/);
+      if(!this.flexFlow) {
+        this.flexFlow = flexFlow;
+      }
+      if(!this.flexShrink) {
+        this.flexShrink = flexShrink;
+      }
+      if(!this.flexBasis) {
+        this.flexBasis = flexBasis;
+      }
     }
-    this.flexShrink = parseFloat(this.flexShrink, 10) || 1;
-    this.flexGrow = parseFloat(this.flexGrow, 10) || 0;
-    let flexBaxis = this.flexBaxis;
-    if(flexBaxis) {
+    this.flexShrink = parseFloat(this.flexShrink) || 1;
+    this.flexGrow = parseFloat(this.flexGrow) || 0;
+    let flexBasis = this.flexBasis;
+    if(flexBasis) {
       const flexDirection = this.node.parent.flexDirection;
       const isRow = flexDirection === 'row' || flexDirection === 'row-reverse';
-      flexBaxis = this.parseNumberValue(flexBaxis, isRow ? 'width' : 'height');
-      this.flexBaxis = flexBaxis;
+      flexBasis = this.parseNumberValue(flexBasis, isRow ? 'width' : 'height');
+      this.flexBasis = flexBasis;
     }
   }
 

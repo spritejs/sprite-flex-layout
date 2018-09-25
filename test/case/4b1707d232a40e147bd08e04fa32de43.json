@@ -1,0 +1,114 @@
+{
+  "container": {
+    "flexDirection": "column",
+    "justifyContent": "flex-start",
+    "flexWrap": "nowrap",
+    "alignItems": "stretch",
+    "alignContent": "stretch",
+    "width": 500,
+    "height": "300"
+  },
+  "items": [
+    {
+      "alignSelf": "auto",
+      "flexGrow": 0,
+      "flexBasis": "30%",
+      "flexShrink": 1,
+      "width": 100,
+      "minWidth": "",
+      "maxWidth": "",
+      "height": 100,
+      "minHeight": "",
+      "maxHeight": "",
+      "borderTop": "",
+      "borderRight": "",
+      "borderBottom": "",
+      "borderLeft": "",
+      "marginTop": "",
+      "marginRight": "",
+      "marginBottom": "",
+      "marginLeft": "",
+      "paddingTop": "",
+      "paddingRight": "",
+      "paddingBottom": "",
+      "paddingLeft": "",
+      "boxSizing": "content-box"
+    },
+    {
+      "alignSelf": "auto",
+      "flexGrow": 0,
+      "flexBasis": "",
+      "flexShrink": 1,
+      "width": 100,
+      "minWidth": "",
+      "maxWidth": "",
+      "height": 100,
+      "minHeight": "",
+      "maxHeight": "",
+      "borderTop": "",
+      "borderRight": "",
+      "borderBottom": "",
+      "borderLeft": "",
+      "marginTop": "",
+      "marginRight": "",
+      "marginBottom": "",
+      "marginLeft": "",
+      "paddingTop": "",
+      "paddingRight": "",
+      "paddingBottom": "",
+      "paddingLeft": "",
+      "boxSizing": "content-box"
+    },
+    {
+      "alignSelf": "auto",
+      "flexGrow": 0,
+      "flexBasis": "",
+      "flexShrink": 1,
+      "width": 100,
+      "minWidth": "",
+      "maxWidth": "",
+      "height": 100,
+      "minHeight": "",
+      "maxHeight": "",
+      "borderTop": "",
+      "borderRight": "",
+      "borderBottom": "",
+      "borderLeft": "",
+      "marginTop": "",
+      "marginRight": "",
+      "marginBottom": "",
+      "marginLeft": "",
+      "paddingTop": "",
+      "paddingRight": "",
+      "paddingBottom": "",
+      "paddingLeft": "",
+      "boxSizing": "content-box"
+    }
+  ],
+  "result": {
+    "left": 0,
+    "top": 0,
+    "width": 500,
+    "height": "300",
+    "children": [
+      {
+        "left": 0,
+        "top": 0,
+        "width": 100,
+        "height": 90
+      },
+      {
+        "left": 0,
+        "top": 90,
+        "width": 100,
+        "height": 100
+      },
+      {
+        "left": 0,
+        "top": 190,
+        "width": 100,
+        "height": 100
+      }
+    ]
+  }
+}

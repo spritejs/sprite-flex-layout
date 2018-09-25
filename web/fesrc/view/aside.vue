@@ -104,44 +104,51 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="border-top">
-          <el-input v-model="flexItem.borderTop" type="text" @change="changeProperty('borderTop', $event)"></el-input>
-        </el-form-item>
-        <el-form-item label="border-right">
-          <el-input v-model="flexItem.borderRight" type="text" @change="changeProperty('borderRight', $event)"></el-input>
-        </el-form-item>
-        <el-form-item label="border-bottom">
-          <el-input v-model="flexItem.borderBottom" type="text" @change="changeProperty('borderBottom', $event)"></el-input>
-        </el-form-item>
-        <el-form-item label="border-left">
-          <el-input v-model="flexItem.borderLeft" type="text" @change="changeProperty('borderLeft', $event)"></el-input>
-        </el-form-item>
+        <div style="padding: 20px 10px;">
+          <div style="width:80px;margin:auto">
+            <el-input v-model="flexItem.borderTop" type="text" @change="changeProperty('borderTop', $event)"></el-input>
+          </div>
+          <div style="display:flex;margin: 10px">
+            <el-input v-model="flexItem.borderLeft" type="text" @change="changeProperty('borderLeft', $event)"></el-input>
+            <div style="margin: 10px 20px;">border</div>
+            <el-input v-model="flexItem.borderRight" type="text" @change="changeProperty('borderRight', $event)"></el-input>
+          </div>
+          <div style="width:80px;margin:auto">
+            <el-input v-model="flexItem.borderBottom" type="text" @change="changeProperty('borderBottom', $event)"></el-input>
+          </div>
+        </div>
 
-        <el-form-item label="margin-top">
-          <el-input v-model="flexItem.marginTop" type="text" @change="changeProperty('marginTop', $event)"></el-input>
-        </el-form-item>
-        <el-form-item label="margin-right">
-          <el-input v-model="flexItem.marginRight" type="text" @change="changeProperty('marginRight', $event)"></el-input>
-        </el-form-item>
-        <el-form-item label="margin-bottom">
-          <el-input v-model="flexItem.marginBottom" type="text" @change="changeProperty('marginBottom', $event)"></el-input>
-        </el-form-item>
-        <el-form-item label="margin-left">
-          <el-input v-model="flexItem.marginLeft" type="text" @change="changeProperty('marginLeft', $event)"></el-input>
-        </el-form-item>
-        
-        <el-form-item label="padding-top">
-          <el-input v-model="flexItem.paddingTop" type="text" @change="changeProperty('paddingTop', $event)"></el-input>
-        </el-form-item>
-        <el-form-item label="padding-right">
-          <el-input v-model="flexItem.paddingRight" type="text" @change="changeProperty('paddingRight', $event)"></el-input>
-        </el-form-item>
-        <el-form-item label="padding-bottom">
-          <el-input v-model="flexItem.paddingBottom" type="text" @change="changeProperty('paddingBottom', $event)"></el-input>
-        </el-form-item>
-        <el-form-item label="padding-left">
-          <el-input v-model="flexItem.paddingLeft" type="text" @change="changeProperty('paddingLeft', $event)"></el-input>
-        </el-form-item>
+        <div style="padding: 20px 10px;">
+          <div style="width:80px;margin:auto">
+            <el-input v-model="flexItem.marginTop" type="text" @change="changeProperty('marginTop', $event)"></el-input>
+          </div>
+          <div style="display:flex;margin: 10px">
+            <el-input v-model="flexItem.marginLeft" type="text" @change="changeProperty('marginLeft', $event)"></el-input>
+            <div style="margin: 10px 20px;">margin</div>
+            <el-input v-model="flexItem.marginRight" type="text" @change="changeProperty('marginRight', $event)"></el-input>
+          </div>
+          <div style="width:80px;margin:auto">
+            <el-input v-model="flexItem.marginBottom" type="text" @change="changeProperty('marginBottom', $event)"></el-input>
+          </div>
+        </div>
+
+        <div style="padding: 20px 10px;">
+          <div style="width:80px;margin:auto">
+            <el-input v-model="flexItem.paddingTop" type="text" @change="changeProperty('paddingTop', $event)"></el-input>
+          </div>
+          <div style="display:flex;margin: 10px">
+            <el-input v-model="flexItem.paddingLeft" type="text" @change="changeProperty('paddingLeft', $event)"></el-input>
+            <div style="margin: 10px 20px;">padding</div>
+            <el-input v-model="flexItem.paddingRight" type="text" @change="changeProperty('paddingRight', $event)"></el-input>
+          </div>
+          <div style="width:80px;margin:auto">
+            <el-input v-model="flexItem.paddingBottom" type="text" @change="changeProperty('paddingBottom', $event)"></el-input>
+          </div>
+        </div>
+
+       
+
+
       </div>
       
        <div v-if="type === ''" style="padding: 20px;color:#ccc;font-size: 18px;">
