@@ -144,20 +144,15 @@ class FlexLine {
       if(item[this.mainMaxSize]) max++;
     });
     while(true) {
-      const itemSpace = space / grow;
+      const itemSpace = space / Math.max(grow, 1);
       if(!max) {
-        let flag = false;
         items.forEach((item, index) => {
           if(item.grow) {
             const increSpace = item.grow * itemSpace;
             this.items[index][this.mainComputedSize] += increSpace;
             space -= increSpace;
-            flag = true;
           }
         });
-        if(flag) {
-          space = 0;
-        }
         break;
       }
       let flag = false;
@@ -179,15 +174,7 @@ class FlexLine {
         max = 0;
       }
     }
-    if(!space) {
-      let pos = 0;
-      this.items.forEach((item) => {
-        item[this.mainPos] = pos + parseMarginAuto(item[this.mainMarginStart]);
-        pos += item[this.mainComputedSize];
-      });
-    }
     return space;
-    // return parseInt(space, 10);
   }
 
   parseByMarginAuto(space) {
@@ -298,7 +285,6 @@ class FlexLine {
     if(space > 0) {
       if(this.hasFlexGrow()) {
         space = this.parseByFlexGrow(space);
-        if(!space) return;
       }
       if(this.hasMarginAutoInMainAxis()) {
         return this.parseByMarginAuto(space);
