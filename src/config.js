@@ -166,20 +166,13 @@ class Config {
     });
   }
 
-  cacluateMargin(prop) {
-    const value = this[prop];
-    if(value === 'auto') return 0;
-    return value;
-  }
-
   getFlexBasis(type = 'width') {
     const flexDirection = this.node.parent.flexDirection;
-    const flexBaxis = this.flexBaxis;
-    if(flexBaxis && flexBaxis !== 'auto') {
+    const flexBasis = this.flexBasis;
+    if(flexBasis && flexBasis !== 'auto') {
       const isRow = flexDirection === 'row' || flexDirection === 'row-reverse';
       if(type === 'width' && isRow || type === 'height' && !isRow) {
-        const value = this.parseNumberValue(flexBaxis, isRow ? 'width' : 'height');
-        return value;
+        return this.parseNumberValue(flexBasis, isRow ? 'width' : 'height');
       }
     }
   }
