@@ -1,31 +1,44 @@
 <template>
 <div style="display:flex;flex-direction:column;height:100vh" @click="changeStatus">
   <div style="padding:20px;background:#fff;">
-    <el-radio v-model="renderType" label="flex">浏览器Flex渲染</el-radio>
-    <el-radio v-model="renderType" label="absolute">计算出的样式渲染</el-radio>
-
-    <el-button type="primary" style="margin-left:50px;" @click="addFlexItem">添加元素</el-button>
+    <el-button type="primary" @click="addFlexItem">添加元素</el-button>
     <el-button type="danger" :disabled="canDisabled" @click="deleteFlexItem">删除元素</el-button>
     <el-button type="success" @click="addTestCase">添加到测试用例</el-button>
+
+
+    <el-dropdown @command="openFailItem">
+      <el-badge :value="failNums" class="item">
+        <el-button type="primary">
+          单元测试（{{successNums}}）<i class="el-icon-arrow-down el-icon--right"></i>
+        </el-button>
+      </el-badge>
+      <el-dropdown-menu slot="dropdown">
+        <el-dropdown-item :command="index" v-for="(item, index) in failList" v-bind:key="index">{{item.name}}</el-dropdown-item>
+      </el-dropdown-menu>
+    </el-dropdown>
   </div>
-  <div class="flex-container" :style="flexWrapStyle">
-    <div v-if="renderType === 'flex'" class="shadow flex-render-container flex-render-flex" :style="flexContainerStyle" :class="flexContainerActive" @click="editFlexContainer($event)">
-      <div class="shadow flex-item" :class="itemActiveClass(index)" @click="editFlexItem(index, $event)" v-for="(item, index) in flexItems" :style="getFlexItemStyle(index)" v-bind:key="index + 1">
-        {{index + 1}}
+  <div style="flex-grow: 1;display:flex;align-items: center;justify-content: space-evenly">
+    <div class="flex-container" :style="flexWrapStyle">
+        <div class="shadow flex-render-container flex-render-flex" :style="flexContainerStyle" :class="flexContainerActive" @click="editFlexContainer($event)">
+          <div class="shadow flex-item" :class="itemActiveClass(index)" @click="editFlexItem(index, $event)" v-for="(item, index) in flexItems" :style="getFlexItemStyle(index)" v-bind:key="index + 1">
+            {{index + 1}}
+          </div>
+        </div>
       </div>
-    </div>
-    <div v-if="renderType === 'absolute'" class="shadow flex-render-container flex-render-absolute">
-      <div class="shadow absolute-item"  v-for="(item, index) in absoluteItems" :style="getAbsoluteItemStyle(index)" v-bind:key="index + 1">
-        {{index + 1}}
+      <div class="flex-container" :style="flexWrapStyle">
+        <div class="shadow flex-render-container flex-render-absolute">
+          <div class="shadow absolute-item"  v-for="(item, index) in absoluteItems" :style="getAbsoluteItemStyle(index)" v-bind:key="index + 1">
+            {{index + 1}}
+          </div>
+        </div>
       </div>
-    </div>
   </div>
 </div>
 </template>
 <script>
 import event from './event.js';
 import Vue from 'vue';
-import {getRender, addTestCase} from '../js/api.js';
+import {getRender, addTestCase, getAllTest} from '../js/api.js';
 
 const backgroundColors = [
   '#fff',
@@ -47,7 +60,9 @@ const backgroundColors = [
 export default {
   data() {
     return {
-      renderType: 'flex',
+      successNums: 0,
+      failNums: 0,
+      failList: [],
       flexWrapStyle: {},
       flexContainerProperties: {},
       flexContainerActive: '',
@@ -67,6 +82,11 @@ export default {
       event.$emit('getFlexStyle', 'item');
     });
     this.activeIndex = -1;
+    getAllTest().then(data => {
+      this.successNums = data.success;
+      this.failNums = data.fail.length;
+      this.failList = data.fail;
+    })
   },
   computed: {
     canDisabled() {
@@ -80,6 +100,13 @@ export default {
     event.$off('changeFlexItemProperties', this.changeFlexItemProperties);
   },
   methods: {
+    openFailItem(index) {
+      const item = this.failList[index];
+      this.flexContainerProperties = item.container;
+      this.flexItems = item.items;
+      this.getRender();
+      event.$emit('showFlexAside', '', {});
+    },
     addTestCase() {
       addTestCase(this.flexContainerProperties, this.flexItems).then(() => {
         this.$message({
@@ -99,9 +126,7 @@ export default {
           width: data.width,
           height: data.height
         }
-        this.absoluteItems = data.children.map((item) => {
-          return {top: item.top, left: item.left, width: item.width, height: item.height};
-        })
+        this.absoluteItems = data.children;
       })
     },
     changeStatus() {

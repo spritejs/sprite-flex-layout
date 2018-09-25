@@ -22,7 +22,6 @@
     /* box-shadow: inset 0 0 0 1px rgba(48,56,69,.2) */
   }
   .flex-container{
-    margin: auto;
     position: relative;
     background: #fff;
   }
@@ -36,10 +35,25 @@
   .flex-render-flex {
     display: flex;
   }
+  .flex-render-flex::before {
+    position: absolute;
+    content: '浏览器 Flex 渲染';
+    top: -60px;
+    color: #ccc;
+    font-size: 30px;
+  }
+  .flex-render-absolute::before {
+    position: absolute;
+    content: '计算后 Absolute 定位渲染';
+    top: -60px;
+    color: #ccc;
+    font-size: 30px;
+  }
   .flex-item {
     border: 0 solid red;
   }
   .absolute-item {
+    border: 0 solid red;
     position: absolute;
   }
   .flex-active {

@@ -206,7 +206,7 @@ class FlexLine {
     this.items.forEach((item) => {
       pos += this._getMarginValue(item[this.mainMarginStart], itemSpace);
       item[this.mainPos] = pos;
-      pos += item[this.mainComputedSize];
+      pos += item[this.mainLayoutSize];
       pos += this._getMarginValue(item[this.mainMarginEnd], itemSpace);
     });
   }
@@ -235,7 +235,7 @@ class FlexLine {
     this.items.forEach((item, index) => {
       pos += marginSizes[index] || 0;
       item[this.mainPos] = pos;
-      pos += item[this.mainComputedSize];
+      pos += item[this.mainLayoutSize];
     });
   }
 

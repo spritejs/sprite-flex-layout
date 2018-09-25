@@ -1,5 +1,4 @@
 import Config from './config';
-import Layout from './layout';
 import Compose from './compose';
 import {
   flexProperties,
@@ -32,19 +31,22 @@ class Node {
     instance.compose();
   }
 
-  getComputedLayout() {
+  getComputedLayout(props = []) {
     const width = this.computedWidth || this.width;
     const height = this.computedHeight || this.height;
-    const layout = new Layout(this.left, this.top, width, height);
+    const layout = {left: this.left || 0, top: this.top || 0, width, height};
+    props.forEach((item) => {
+      layout[item] = this[item];
+    });
     return layout;
   }
 
-  getAllComputedLayout() {
+  getAllComputedLayout(props) {
     const layout = this.getComputedLayout();
     layout.children = this.children.sort((a, b) => {
       return a.id > b.id ? 1 : -1;
     }).map((item) => {
-      return item.getComputedLayout();
+      return item.getComputedLayout(props);
     });
     return layout;
   }

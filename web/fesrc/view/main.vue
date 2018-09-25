@@ -1,7 +1,7 @@
 <template>
 <el-container class="AdminBody">
   <el-container>
-    <el-aside width="350px" class="shadow">
+    <el-aside width="260px" class="shadow">
       <div class="AdminAside">
         <h1>Flex-Layout</h1>
         <Aside />

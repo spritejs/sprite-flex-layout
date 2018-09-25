@@ -1,6 +1,6 @@
 <template>
   <div style="padding: 20px;padding-left:0">
-    <el-form ref="form" :model="form" label-width="120px">
+    <el-form ref="form" :model="form" label-width="110px">
       <div v-if="type === 'container'">
         <el-form-item v-if="type === 'container'" label="flex-direction">
           <el-select v-model="flexContainer.flexDirection" placeholder="flexDirection" @change="changeProperty('flexDirection', $event)">
@@ -98,10 +98,10 @@
         </el-form-item>
 
         <el-form-item label="box-sizing">
-          <el-radio-group v-model="flexItem.boxSizing"  @change="changeProperty('boxSizing', $event)">
-            <el-radio label="content-box"></el-radio>
-            <el-radio label="border-box"></el-radio>
-          </el-radio-group>
+          <el-select v-model="flexItem.boxSizing" placeholder="boxSizing" @change="changeProperty('boxSizing', $event)">
+            <el-option label="content-box" value="content-box"></el-option>
+            <el-option label="border-box" value="border-box"></el-option>
+          </el-select>
         </el-form-item>
 
         <el-form-item label="border-top">
@@ -144,7 +144,9 @@
         </el-form-item>
       </div>
       
-
+       <div v-if="type === ''" style="padding: 20px;color:#ccc;font-size: 18px;">
+         选中右侧一个元素后进行编辑
+       </div>
     </el-form>
   </div>
 </template>

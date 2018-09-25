@@ -15,3 +15,7 @@ export const addTestCase = (container, items) => {
     items: JSON.stringify(items)
   });
 };
+
+export const getAllTest = () => {
+  return sync.POST('/index/test');
+};
