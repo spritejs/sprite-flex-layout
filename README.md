@@ -9,7 +9,7 @@ npm install sprite-flex-layout
 
 ## How to use
 
-```
+```js
 import {Node} from 'sprite-flex-layout';
 const container = Node.create({
   width: 500,
@@ -67,11 +67,7 @@ console.log(layout);
 * `paddingRight` 
 * `paddingBottom` 
 * `paddingLeft` 
-* `boxSizing` 
-* `layoutWidth` 
-* `layoutHeight` 
+* `boxSizing`  `content-box` | `border-box`, default is `content-box`
 * `offsetWidth` 
 * `offsetHeight` 
-* `computedWidth` 
-* `computedHeight` 
 * `order`
