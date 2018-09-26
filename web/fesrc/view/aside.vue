@@ -33,7 +33,7 @@
             <el-option label="flex-start" value="flex-start"></el-option>
             <el-option label="center" value="center"></el-option>
             <el-option label="flex-end" value="flex-end"></el-option>
-            <el-option label="baseline" value="baseline"></el-option>
+            <el-option disabled label="baseline" value="baseline"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item v-if="type === 'container'" label="align-content">
@@ -62,7 +62,7 @@
             <el-option label="flex-start" value="flex-start"></el-option>
             <el-option label="center" value="center"></el-option>
             <el-option label="flex-end" value="flex-end"></el-option>
-            <el-option label="baseline" value="baseline"></el-option>
+            <el-option disabled label="baseline" value="baseline"></el-option>
           </el-select>
         </el-form-item>
 

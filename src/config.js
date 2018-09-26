@@ -65,7 +65,7 @@ class Config {
     const borderList = ['borderTop', 'borderRight', 'borderBottom', 'borderLeft'];
     this.border = borderList.map((item, index) => {
       this[item] = this.parseNumberValue(this[item]) || border[index];
-      if(this[item] < 0) {
+      if(this[item] < 0 || this[item] === 'auto') {
         throw new Error(`${item}:${this[item]} is not valid`);
       }
       return this[item];
@@ -82,7 +82,7 @@ class Config {
     const paddingList = ['paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft'];
     this.padding = paddingList.map((item, index) => {
       this[item] = this.parseNumberValue(this[item], 'width') || padding[index];
-      if(this[item] < 0) {
+      if(this[item] < 0 || this[item] === 'auto') {
         throw new Error(`${item}:${this[item]} is not valid`);
       }
       return this[item];

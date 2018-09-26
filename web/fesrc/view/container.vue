@@ -55,7 +55,63 @@ const backgroundColors = [
   '#F6D6FF',
   '#B85A9A',
   '#9DD3FA',
-  '#DFB5B7'
+  '#DFB5B7',
+  '#4cb4e7',
+  '#ffc09f',
+  '#ffee93',
+  '#e2dbbe',
+  '#a3a380',
+  '#DB9019',
+  '#5ED5D1',
+  '#1A2D27',
+  '#FF6E97',
+  '#F1AAA6',
+  '#F6D6FF',
+  '#B85A9A',
+  '#9DD3FA',
+  '#DFB5B7',
+  '#4cb4e7',
+  '#ffc09f',
+  '#ffee93',
+  '#e2dbbe',
+  '#a3a380',
+  '#DB9019',
+  '#5ED5D1',
+  '#1A2D27',
+  '#FF6E97',
+  '#F1AAA6',
+  '#F6D6FF',
+  '#B85A9A',
+  '#9DD3FA',
+  '#DFB5B7',
+  '#4cb4e7',
+  '#ffc09f',
+  '#ffee93',
+  '#e2dbbe',
+  '#a3a380',
+  '#DB9019',
+  '#5ED5D1',
+  '#1A2D27',
+  '#FF6E97',
+  '#F1AAA6',
+  '#F6D6FF',
+  '#B85A9A',
+  '#9DD3FA',
+  '#DFB5B7',
+  '#4cb4e7',
+  '#ffc09f',
+  '#ffee93',
+  '#e2dbbe',
+  '#a3a380',
+  '#DB9019',
+  '#5ED5D1',
+  '#1A2D27',
+  '#FF6E97',
+  '#F1AAA6',
+  '#F6D6FF',
+  '#B85A9A',
+  '#9DD3FA',
+  '#DFB5B7',
 ]
 export default {
   data() {
@@ -109,12 +165,16 @@ export default {
     },
     addTestCase() {
       addTestCase(this.flexContainerProperties, this.flexItems).then(() => {
-        this.$message({
+        this.$notify({
+          title: '成功',
           message: '添加成功',
           type: 'success'
         });
       }).catch(err => {
-        this.$message.error('添加失败');
+        this.$notify.error({
+          title: '错误',
+          message: '添加失败'
+        });
         console.error(err);
       })
     },
@@ -127,6 +187,11 @@ export default {
           height: data.height
         }
         this.absoluteItems = data.children;
+      }).catch((e) => {
+        this.$notify.error({
+          title: '错误',
+          message: e.errmsg
+        });
       })
     },
     changeStatus() {

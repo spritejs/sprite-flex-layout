@@ -42,13 +42,17 @@ module.exports = class extends Base {
       const node = new Node(item);
       containerNode.appendChild(node);
     });
-    containerNode.calculateLayout();
-    const props = [
-      'paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft',
-      'borderTop', 'borderRight', 'borderBottom', 'borderLeft', 'boxSizing'
-    ];
-    const layout = containerNode.getAllComputedLayout(props);
-    return this.success(layout);
+    try {
+      containerNode.calculateLayout();
+      const props = [
+        'paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft',
+        'borderTop', 'borderRight', 'borderBottom', 'borderLeft', 'boxSizing'
+      ];
+      const layout = containerNode.getAllComputedLayout(props);
+      return this.success(layout);
+    } catch (e) {
+      return this.fail(1000, e.message);
+    }
   }
 
   collectAction() {
