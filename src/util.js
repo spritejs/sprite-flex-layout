@@ -126,7 +126,7 @@ export function parseSpaceBetween(space, type, num) {
     }
   };
   if(space < 0) {
-    if(type === 'space-between') {
+    if(type === 'space-between' || type === 'stretch') {
       type = 'flex-start';
     } else if(type === 'space-around' || type === 'space-evenly') {
       type = 'center';
