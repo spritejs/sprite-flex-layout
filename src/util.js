@@ -148,6 +148,15 @@ export function parseSpaceBetween(space, type, num) {
       fillFull(space / (num - 1));
       marginSize[num] = 0;
     }
+  } else if(type === 'space-between-reverse') {
+    if(num === 1) {
+      marginSize[0] = space;
+      fillFull(0);
+    } else {
+      marginSize[0] = 0;
+      fillFull(space / (num - 1));
+      marginSize[num] = 0;
+    }
   } else if(type === 'space-around') {
     const itemSize = space / num;
     marginSize[0] = itemSize / 2;
@@ -208,6 +217,7 @@ export function getProp(flexDirection) {
 export function exchangeFlexProp(prop) {
   if(prop === 'flex-start') return 'flex-end';
   if(prop === 'flex-end') return 'flex-start';
+  if(prop === 'space-between') return 'space-between-reverse';
   return prop;
 }
 
