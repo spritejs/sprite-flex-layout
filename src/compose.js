@@ -80,6 +80,7 @@ class Compose {
   parseAlignContent() {
     let alignContent = this.container.alignContent;
     const crossAxisSize = this.container[this.crossSize];
+    if(!crossAxisSize) return;
     let linesCrossAxisSize = 0;
     const lineLength = this.flexLines.length;
     this.flexLines.forEach((line) => {

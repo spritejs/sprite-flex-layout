@@ -108,16 +108,17 @@ class Config {
     if(flex) {
       if(typeof flex === 'number') {
         this.flexGrow = this.flexGrow || flex;
-      }
-      const [flexFlow, flexShrink, flexBasis] = flex.split(/\s+/);
-      if(!this.flexFlow) {
-        this.flexFlow = flexFlow;
-      }
-      if(!this.flexShrink) {
-        this.flexShrink = flexShrink;
-      }
-      if(!this.flexBasis) {
-        this.flexBasis = flexBasis;
+      } else {
+        const [flexFlow, flexShrink, flexBasis] = flex.split(/\s+/);
+        if(!this.flexFlow) {
+          this.flexFlow = flexFlow;
+        }
+        if(!this.flexShrink) {
+          this.flexShrink = flexShrink;
+        }
+        if(!this.flexBasis) {
+          this.flexBasis = flexBasis;
+        }
       }
     }
     this.flexShrink = parseFloat(this.flexShrink) || 1;
