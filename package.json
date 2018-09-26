@@ -5,6 +5,7 @@
   "main": "./lib/index.js",
   "scripts": {
     "lint": "eslint 'src/**/*.js' --fix",
+    "build": "rm -rf lib/* && babel src -d lib",
     "compile": "rm -rf lib/* && babel src -d lib --watch",
     "test": "nyc ava test/index.js && nyc report --reporter=html"
   },

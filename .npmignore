@@ -61,3 +61,8 @@ typings/
 .next
 
 web/
+
+bootstrap.sh
+build.sh
+Dockerfile
+output

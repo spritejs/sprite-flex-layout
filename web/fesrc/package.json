@@ -6,7 +6,7 @@
   "author": "verymuch",
   "license": "ISC",
   "scripts": {
-    "build": "webpack --config build/webpack.prod.js && babel ../www/static/js/ --out-dir ../www/static/js",
+    "build": "webpack --config build/webpack.prod.js",
     "start": "webpack-dev-server --config build/webpack.dev.js --public 127.0.0.1"
   },
   "pre-commit": [
