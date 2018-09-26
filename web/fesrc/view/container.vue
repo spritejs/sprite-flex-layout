@@ -3,10 +3,10 @@
   <div style="padding:20px;background:#fff;">
     <el-button type="primary" @click="addFlexItem">添加元素</el-button>
     <el-button type="danger" :disabled="canDisabled" @click="deleteFlexItem">删除元素</el-button>
-    <el-button type="success" @click="addTestCase">添加到测试用例</el-button>
+    <el-button v-if="showBtn" type="success" @click="addTestCase">添加到测试用例</el-button>
 
 
-    <el-dropdown @command="openFailItem" style="margin-left:10px;">
+    <el-dropdown v-if="showBtn" @command="openFailItem" style="margin-left:10px;">
       <el-badge :value="failNums" class="item">
         <el-button type="primary">
           单元测试（{{successNums}}）<i class="el-icon-arrow-down el-icon--right"></i>
@@ -116,6 +116,7 @@ const backgroundColors = [
 export default {
   data() {
     return {
+      showBtn: location.hostname === '127.0.0.1',
       successNums: 0,
       failNums: 0,
       failList: [],
