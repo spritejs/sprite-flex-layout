@@ -1,6 +1,6 @@
 {
   "name": "sprite-flex-layout",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "flex layout",
   "main": "./lib/index.js",
   "scripts": {
