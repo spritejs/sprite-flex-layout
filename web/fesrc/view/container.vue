@@ -159,9 +159,10 @@ export default {
   methods: {
     openFailItem(index) {
       const item = this.failList[index];
-      this.flexContainerProperties = item.container;
       this.flexItems = item.items;
-      this.getRender();
+      this.activeIndex = -1;
+      this.flexContainerActive = '';
+      this.changeFlexContainerProperties(item.container);
       event.$emit('showFlexAside', '', {});
     },
     addTestCase() {
@@ -202,10 +203,10 @@ export default {
       event.$emit('showFlexAside', '', {})
     },
     addFlexItem() {
-      const index = this.activeIndex;
+      this.flexContainerActive = '';
       this.activeIndex = this.flexItems.length;
       event.$emit('getFlexStyle', 'item');
-      this.activeIndex = index;
+      event.$emit('showFlexAside', 'item', Object.assign({}, this.flexItems[this.activeIndex]))
       this.getRender();
     },
     deleteFlexItem() {
