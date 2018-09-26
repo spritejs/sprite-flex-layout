@@ -1,0 +1,117 @@
+{
+  "container": {
+    "flexDirection": "row",
+    "justifyContent": "flex-start",
+    "flexWrap": "nowrap",
+    "alignItems": "stretch",
+    "alignContent": "stretch",
+    "width": "300",
+    "height": "200"
+  },
+  "items": [
+    {
+      "alignSelf": "auto",
+      "flexGrow": "1",
+      "flexBasis": "",
+      "flexShrink": 1,
+      "width": "80",
+      "minWidth": "",
+      "maxWidth": "",
+      "height": "50",
+      "minHeight": "",
+      "maxHeight": "",
+      "borderTop": "",
+      "borderRight": "",
+      "borderBottom": "",
+      "borderLeft": "",
+      "marginTop": "",
+      "marginRight": "",
+      "marginBottom": "",
+      "marginLeft": "",
+      "paddingTop": "",
+      "paddingRight": "",
+      "paddingBottom": "",
+      "paddingLeft": "",
+      "boxSizing": "content-box",
+      "order": ""
+    },
+    {
+      "alignSelf": "auto",
+      "flexGrow": "2",
+      "flexBasis": "",
+      "flexShrink": "2",
+      "width": "30",
+      "minWidth": "",
+      "maxWidth": "",
+      "height": "30",
+      "minHeight": "",
+      "maxHeight": "",
+      "borderTop": "",
+      "borderRight": "",
+      "borderBottom": "",
+      "borderLeft": "",
+      "marginTop": "",
+      "marginRight": "",
+      "marginBottom": "",
+      "marginLeft": "",
+      "paddingTop": "",
+      "paddingRight": "",
+      "paddingBottom": "",
+      "paddingLeft": "",
+      "boxSizing": "content-box",
+      "order": ""
+    },
+    {
+      "alignSelf": "auto",
+      "flexGrow": "3",
+      "flexBasis": "",
+      "flexShrink": "3",
+      "width": "80",
+      "minWidth": "",
+      "maxWidth": "",
+      "height": "60",
+      "minHeight": "",
+      "maxHeight": "",
+      "borderTop": "",
+      "borderRight": "",
+      "borderBottom": "",
+      "borderLeft": "",
+      "marginTop": "",
+      "marginRight": "",
+      "marginBottom": "",
+      "marginLeft": "",
+      "paddingTop": "",
+      "paddingRight": "",
+      "paddingBottom": "",
+      "paddingLeft": "",
+      "boxSizing": "content-box",
+      "order": ""
+    }
+  ],
+  "result": {
+    "left": 0,
+    "top": 0,
+    "width": "300",
+    "height": "200",
+    "children": [
+      {
+        "left": 0,
+        "top": 0,
+        "width": 98.33333333333333,
+        "height": 50
+      },
+      {
+        "left": 98.33333333333333,
+        "top": 0,
+        "width": 66.66666666666666,
+        "height": 30
+      },
+      {
+        "left": 165,
+        "top": 0,
+        "width": 135,
+        "height": 60
+      }
+    ]
+  }
+}

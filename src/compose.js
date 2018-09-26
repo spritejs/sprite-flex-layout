@@ -80,14 +80,16 @@ class Compose {
   parseAlignContent() {
     let alignContent = this.container.alignContent;
     const crossAxisSize = this.container[this.crossSize];
-    if(!crossAxisSize) return;
-    let linesCrossAxisSize = 0;
+    let space = 0;
     const lineLength = this.flexLines.length;
-    this.flexLines.forEach((line) => {
-      linesCrossAxisSize += line.crossAxisSize;
-    });
-    // margin between lines
-    const space = crossAxisSize - linesCrossAxisSize;
+    if(crossAxisSize) {
+      let linesCrossAxisSize = 0;
+      this.flexLines.forEach((line) => {
+        linesCrossAxisSize += line.crossAxisSize;
+      });
+      // margin between lines
+      space = crossAxisSize - linesCrossAxisSize;
+    }
     let linesMarginSize = [];
     if(lineLength === 1) {
       this.container.alignContent = 'stretch';
