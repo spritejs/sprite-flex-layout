@@ -129,6 +129,8 @@ class Config {
       const isRow = flexDirection === 'row' || flexDirection === 'row-reverse';
       flexBasis = this.parseNumberValue(flexBasis, isRow ? 'width' : 'height');
       this.flexBasis = flexBasis;
+    } else if(this.flexBasis === '') {
+      this.flexBasis = undefined;
     }
   }
 
@@ -188,7 +190,7 @@ class Config {
   getFlexBasis(type = 'width') {
     const flexDirection = this.node.parent.flexDirection;
     const flexBasis = this.flexBasis;
-    if(flexBasis && flexBasis !== 'auto') {
+    if(flexBasis !== undefined && flexBasis !== 'auto') {
       const isRow = flexDirection === 'row' || flexDirection === 'row-reverse';
       if(type === 'width' && isRow || type === 'height' && !isRow) {
         return this.parseNumberValue(flexBasis, isRow ? 'width' : 'height');
@@ -206,7 +208,10 @@ class Config {
   }
 
   parseComputedWidth() {
-    let width = this.getFlexBasis('width') || this.offsetWidth || 0;
+    let width = this.getFlexBasis('width');
+    if(width === undefined) {
+      width = this.offsetWidth || 0;
+    }
     const minWidth = this.minWidth;
     let maxWidth = this.maxWidth;
     if(maxWidth && minWidth && maxWidth < minWidth) {
@@ -246,7 +251,10 @@ class Config {
   }
 
   parseComputedHeight() {
-    let height = this.getFlexBasis('height') || this.offsetHeight || 0;
+    let height = this.getFlexBasis('height');
+    if(height === undefined) {
+      height = this.offsetHeight || 0;
+    }
     const minHeight = this.minHeight;
     let maxHeight = this.maxHeight;
     if(maxHeight && minHeight && maxHeight < minHeight) {

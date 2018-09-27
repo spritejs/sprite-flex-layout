@@ -173,25 +173,25 @@
     "height": "200",
     "children": [
       {
-        "left": 10,
+        "left": 90,
         "top": 0,
         "width": 80,
         "height": 50
       },
       {
-        "left": 60,
+        "left": 140,
         "top": 50,
         "width": 30,
         "height": 0
       },
       {
-        "left": 0,
+        "left": 80,
         "top": 50,
         "width": 90,
         "height": 60
       },
       {
-        "left": 0,
+        "left": 80,
         "top": 110,
         "width": 90,
         "height": 50

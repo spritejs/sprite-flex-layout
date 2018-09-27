@@ -32,8 +32,14 @@ class Node {
   }
 
   getComputedLayout(props = []) {
-    const width = this.computedWidth || this.width;
-    const height = this.computedHeight || this.height;
+    let width = this.computedWidth;
+    if(width === undefined) {
+      width = this.width;
+    }
+    let height = this.computedHeight;
+    if(height === undefined) {
+      height = this.height;
+    }
     const layout = {left: this.left || 0, top: this.top || 0, width, height};
     props.forEach((item) => {
       layout[item] = this[item];
