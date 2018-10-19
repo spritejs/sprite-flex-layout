@@ -17,7 +17,7 @@ class Config {
     this.config = {};
     this.node = node;
     Object.keys(config).forEach((item) => {
-      if(!flexProperties.includes(item)) {
+      if(flexProperties.indexOf(item) === -1) {
         throw new Error(`config ${item} is not valid`);
       }
       this[item] = config[item];
@@ -155,9 +155,9 @@ class Config {
     const flexFlow = this.flexFlow;
     if(flexFlow) {
       flexFlow.split(/\s+/).forEach((item) => {
-        if(flexDirectionValues.includes(item)) {
+        if(flexDirectionValues.indexOf(item) > -1) {
           this.flexDirection = item;
-        } else if(flexWrapValues.includes(item)) {
+        } else if(flexWrapValues.indexOf(item) > -1) {
           this.flexWrap = item;
         } else {
           throw new Error(`FlexFlow: ${flexFlow} is not valid`);
