@@ -2,7 +2,7 @@
   "name": "web",
   "description": "application created by thinkjs",
   "version": "1.0.0",
-  "author": "lichengyin <lichengyin@360.cn>",
+  "author": "welefen",
   "scripts": {
     "start": "node development.js",
     "lint": "eslint src/",
@@ -37,7 +37,7 @@
     "metadata": {
       "name": "web",
       "description": "application created by thinkjs",
-      "author": "lichengyin <lichengyin@360.cn>",
+      "author": "welefen",
       "babel": false
     },
     "projectName": "web",
